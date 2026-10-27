@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PromptWave | AI Creator-Driven Music Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PromptWave | AI Music Streaming</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome 6 CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* I-lock ang buong screen para maiwasan ang upper at lower scrolling */
+    /* Full Viewport Lock to Prevent Page Jitter */
     html, body {
       height: 100%;
+      width: 100%;
       overflow: hidden;
       background-color: #07090e;
     }
 
-    /* Malaking Blurry Ambient Background */
+    /* Ambient Glowing Blurred Backdrop */
     .ambient-glow-wrapper {
       position: fixed;
       inset: 0;
@@ -27,65 +28,66 @@
     }
     .blur-orb-emerald {
       position: absolute;
-      top: -15%;
+      top: -10%;
       left: 10%;
-      width: 650px;
-      height: 650px;
+      width: 550px;
+      height: 550px;
       background: radial-gradient(circle, rgba(16, 185, 129, 0.22), transparent 70%);
-      filter: blur(100px);
+      filter: blur(90px);
     }
     .blur-orb-indigo {
       position: absolute;
       bottom: -10%;
       right: 5%;
-      width: 700px;
-      height: 700px;
+      width: 600px;
+      height: 600px;
       background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent 70%);
-      filter: blur(120px);
-    }
-    .blur-orb-purple {
-      position: absolute;
-      top: 35%;
-      left: 40%;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(217, 70, 239, 0.12), transparent 70%);
-      filter: blur(110px);
+      filter: blur(100px);
     }
 
     /* 3D Glass Cards */
     .card-glass {
-      background: rgba(16, 20, 32, 0.65);
+      background: rgba(16, 20, 32, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(16px);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .card-glass:hover {
       background: rgba(22, 28, 48, 0.85);
       border-color: rgba(16, 185, 129, 0.4);
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.15);
     }
 
     /* 3D Tactile Buttons */
     .btn-3d-green {
       background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 4px 0 #047857, 0 8px 16px rgba(16, 185, 129, 0.35);
       transition: all 0.12s ease;
     }
     .btn-3d-green:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 #047857, 0 12px 22px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 6px 0 #047857, 0 10px 18px rgba(16, 185, 129, 0.45);
     }
     .btn-3d-green:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 #047857, 0 4px 8px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 1px 0 #047857, 0 4px 6px rgba(16, 185, 129, 0.2);
     }
 
-    /* Custom Slim Scrollbar para lang sa Highlights area */
+    .btn-3d-dark {
+      background: linear-gradient(180deg, #1c2236 0%, #131726 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 3px 0 #0a0d17;
+      transition: all 0.12s ease;
+    }
+    .btn-3d-dark:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #0a0d17;
+    }
+
+    /* Custom Slim Scrollbar for middle feed only */
     .custom-scroll::-webkit-scrollbar {
-      width: 6px;
+      width: 4px;
     }
     .custom-scroll::-webkit-scrollbar-track {
       background: transparent;
@@ -93,9 +95,6 @@
     .custom-scroll::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.15);
       border-radius: 99px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-      background: rgba(16, 185, 129, 0.5);
     }
 
     input[type="range"] {
@@ -105,204 +104,269 @@
 </head>
 <body class="text-gray-100 flex flex-col font-sans select-none antialiased relative">
 
-  <!-- MALAKING BLURRY BACKGROUND -->
+  <!-- ATMOSPHERIC BLURRED BACKGROUND -->
   <div class="ambient-glow-wrapper">
     <div class="blur-orb-emerald"></div>
     <div class="blur-orb-indigo"></div>
-    <div class="blur-orb-purple"></div>
   </div>
 
-  <!-- ================= 1. NAKA-LOCK NA UPPER HEADER (HINDI NAG-IISCROLL) ================= -->
-  <header class="h-16 flex-shrink-0 bg-[#0c0e18]/90 backdrop-blur-md border-b border-white/10 px-6 flex items-center justify-between z-40 relative">
-    
-    <!-- Logo & Brand -->
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
-        <i class="fa-solid fa-wave-square text-lg text-white"></i>
-      </div>
-      <div>
-        <div class="flex items-center gap-1.5">
-          <span class="text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-indigo-400">PROMPT<span class="text-white">WAVE</span></span>
-          <span class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">AI Open Studio</span>
-        </div>
-        <p class="text-[10px] text-gray-400 hidden sm:block">Upload • Auto-Genre Sort • Earn</p>
-      </div>
-    </div>
+  <!-- PORTRAIT APP SHELL WRAPPER -->
+  <div class="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto h-full flex flex-col justify-between relative z-10">
 
-    <!-- Search Engine -->
-    <div class="hidden md:flex items-center bg-[#131625] border border-white/10 rounded-full px-4 py-1.5 w-80 focus-within:border-emerald-500/80 transition">
-      <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2.5 text-xs"></i>
-      <input type="text" id="search-input" placeholder="Search song title, artist, or genre..." class="bg-transparent border-none text-xs text-white focus:outline-none w-full placeholder-gray-500">
-    </div>
-
-    <!-- Upload Action Button -->
-    <div class="flex items-center gap-3">
-      <button id="open-upload-modal" class="btn-3d-green text-xs font-black px-4 py-2 rounded-xl flex items-center gap-2 text-black cursor-pointer">
-        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
-        <span>UPLOAD AI SONG</span>
-      </button>
-
-      <div class="w-9 h-9 rounded-xl bg-[#171b2d] border border-white/15 flex items-center justify-center text-emerald-400 shadow cursor-pointer">
-        <i class="fa-regular fa-user text-sm"></i>
-      </div>
-    </div>
-  </header>
-
-  <!-- ================= MAIN MIDDLE CONTAINER ================= -->
-  <div class="flex flex-1 overflow-hidden z-10 relative">
-
-    <!-- ================= 2. NAKA-LOCK NA LEFT MENUS (HINDI NAG-IISCROLL) ================= -->
-    <aside class="w-64 bg-[#0a0d16]/75 backdrop-blur-md border-r border-white/5 p-4 flex flex-col justify-between hidden lg:flex flex-shrink-0">
+    <!-- ================= 1. LOCKED TOP HEADER ================= -->
+    <header class="h-14 flex-shrink-0 bg-[#0c0e18]/90 backdrop-blur-md border-b border-white/10 px-4 flex items-center justify-between z-40">
       
-      <div class="flex flex-col gap-6">
-        <!-- Main Navigation Links -->
-        <div class="flex flex-col gap-1.5">
-          <span class="text-[10px] font-black uppercase tracking-wider text-gray-500 px-3">Navigation</span>
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-400 bg-white/5 font-bold text-xs text-left w-full">
-            <i class="fa-solid fa-house text-sm w-4"></i> Home Showcase
-          </button>
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 font-semibold text-xs text-left w-full transition">
-            <i class="fa-solid fa-chart-simple text-amber-400 text-sm w-4"></i> Top Streamed
-          </button>
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 font-semibold text-xs text-left w-full transition">
-            <i class="fa-solid fa-users text-indigo-400 text-sm w-4"></i> AI Artists
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('home')">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow">
+          <i class="fa-solid fa-wave-square text-xs text-white"></i>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-base font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-indigo-300">
+            PROMPT<span class="text-white">WAVE</span>
+          </span>
+          <span id="header-plan-badge" onclick="openPremiumModal()" class="text-[9px] bg-white/10 text-gray-300 border border-white/10 px-1.5 py-0.2 rounded font-bold cursor-pointer hover:border-emerald-500 transition">FREE</span>
+        </div>
+      </div>
+
+      <!-- Action Area: ONLY ONE UPLOAD BUTTON + GOOGLE SIGN-IN -->
+      <div class="flex items-center gap-2">
+        <!-- THE SOLE UPLOAD BUTTON -->
+        <button id="open-upload-modal" class="btn-3d-green text-[11px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-black cursor-pointer">
+          <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+          <span>UPLOAD</span>
+        </button>
+
+        <!-- Google Login Demo -->
+        <div id="auth-container">
+          <button onclick="openLoginModal()" class="btn-3d-dark text-[11px] font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 text-gray-200 cursor-pointer">
+            <i class="fa-brands fa-google text-red-400"></i>
+            <span class="hidden sm:inline">Sign In</span>
           </button>
         </div>
+      </div>
+    </header>
 
-        <!-- Creator Monetization Info -->
-        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-[#111627] to-indigo-950/40 border border-emerald-500/20 shadow-lg">
-          <div class="flex items-center justify-between text-xs font-black text-emerald-400 mb-1">
-            <span><i class="fa-solid fa-coins text-amber-400 mr-1"></i> Creator Pay</span>
-            <span class="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/40">Active</span>
+    <!-- ================= 2. MIDDLE SCROLLABLE FEED ================= -->
+    <main class="flex-1 overflow-y-auto custom-scroll p-4 flex flex-col gap-5" id="main-scroll-feed">
+
+      <!-- ================= VIEW 1: HOME ================= -->
+      <div id="view-home" class="view-panel flex flex-col gap-4">
+        
+        <!-- Search Bar -->
+        <div class="flex items-center bg-[#131625] border border-white/10 rounded-xl px-3.5 py-2 focus-within:border-emerald-500/80 transition">
+          <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2 text-xs"></i>
+          <input type="text" id="search-input" placeholder="Search tracks, AI creators, prompts..." class="bg-transparent border-none text-xs text-white focus:outline-none w-full placeholder-gray-500">
+        </div>
+
+        <!-- Greeting & Demo Premium Promotion Banner -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900/90 to-indigo-950/70 p-4 border border-white/10 shadow-lg flex items-center justify-between">
+          <div class="max-w-[260px] sm:max-w-md">
+            <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">PromptWave Music</span>
+            <h1 class="text-xl font-black mt-1 text-white" id="greeting-title">Good Evening</h1>
+            <p class="text-[11px] text-gray-300 mt-0.5 leading-snug">Upload your songs to auto-generate genre folders. Listen and save to your account for offline streaming!</p>
           </div>
-          <p class="text-[10px] text-gray-400">Automatic revenue computation: ₱0.15 bawat stream.</p>
-          <div class="mt-2 pt-2 border-t border-white/5 flex justify-between items-center text-xs">
-            <span class="text-[10px] text-gray-500">Live Pool:</span>
-            <span class="font-extrabold text-emerald-400" id="total-community-earnings">₱0.00</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Live Platform Counters -->
-      <div class="text-[10px] text-gray-500 flex flex-col gap-1 border-t border-white/5 pt-3">
-        <div class="flex justify-between"><span>Active Folders:</span> <span class="text-white font-bold" id="active-folders-count">0 Folders</span></div>
-        <div class="flex justify-between"><span>Uploaded Tracks:</span> <span class="text-emerald-400 font-bold" id="total-tracks-count">0 Songs</span></div>
-      </div>
-    </aside>
-
-    <!-- ================= 3. ANG TANGING SCROLLABLE NA PARTE (DYNAMIC FOLDERS FEED) ================= -->
-    <main class="flex-1 overflow-y-auto custom-scroll p-6 flex flex-col gap-6" id="main-scroll-feed">
-
-      <!-- Compact Greeting / Instructions Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900/90 to-indigo-950/70 p-6 border border-white/10 shadow-2xl flex items-center justify-between min-h-[130px]">
-        <div class="z-10 max-w-xl">
-          <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded">PromptWave Creator Hub</span>
-          <h1 class="text-2xl font-black mt-1 text-white">Smart Auto-Folder AI Library</h1>
-          <p class="text-xs text-gray-300 mt-1">Lahat ng i-a-upload mong kanta ay awtomatikong gagawan ng sariling **Genre Folder** dito sa home.</p>
-        </div>
-        <div class="z-10 hidden sm:block">
-          <button onclick="document.getElementById('open-upload-modal').click()" class="btn-3d-green text-xs font-black px-5 py-3 rounded-xl text-black flex items-center gap-2 cursor-pointer">
-            <i class="fa-solid fa-plus"></i> UPLOAD SONG
+          <button onclick="openPremiumModal()" class="flex-shrink-0 bg-gradient-to-tr from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black text-[10px] font-black px-3 py-2 rounded-xl shadow-lg flex flex-col items-center cursor-pointer transition">
+            <span class="flex items-center gap-1"><i class="fa-solid fa-crown text-xs"></i> PREMIUM</span>
+            <span class="text-[9px] font-bold">₱99 / week</span>
           </button>
         </div>
-        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Quick AI Smart Mixes -->
+        <div>
+          <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-2">Featured AI Mixes</h2>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="card-glass p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer group">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-black"><i class="fa-solid fa-bolt"></i></div>
+              <span class="text-xs font-bold text-white group-hover:text-emerald-400 truncate">Viral AI Hits</span>
+            </div>
+            <div class="card-glass p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer group">
+              <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xs font-black"><i class="fa-solid fa-headphones"></i></div>
+              <span class="text-xs font-bold text-white group-hover:text-indigo-400 truncate">Lo-Fi Chill Stems</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DYNAMIC AUTO-GENRE FOLDERS -->
+        <div id="genre-folders-container" class="flex flex-col gap-6 pb-6">
+          <!-- Folders render here -->
+        </div>
+
       </div>
 
-      <!-- DYNAMIC GENRE FOLDERS CONTAINER (Dito lalabas ang mga folders) -->
-      <div id="genre-folders-container" class="flex flex-col gap-8 pb-10">
-        <!-- Dito awtomatikong mag-ge-generate ang mga Folders -->
+      <!-- ================= VIEW 2: YOUR LIBRARY ================= -->
+      <div id="view-library" class="view-panel hidden flex-col gap-4">
+        <div class="pb-2 border-b border-white/10 flex justify-between items-center">
+          <div>
+            <h1 class="text-lg font-black text-white">Your Library</h1>
+            <p class="text-[11px] text-gray-400">Account storage & downloaded offline tracks.</p>
+          </div>
+          <!-- Offline Only Filter Badge -->
+          <button id="filter-offline-btn" onclick="toggleLibraryOfflineFilter()" class="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer">
+            <i class="fa-solid fa-circle-down text-emerald-400"></i> Downloaded
+          </button>
+        </div>
+
+        <!-- Library Container -->
+        <div id="library-songs-container" class="flex flex-col gap-2.5 pb-6">
+          <!-- Populated from uploads and account downloads -->
+        </div>
+      </div>
+
+      <!-- ================= VIEW 3: SETTINGS ================= -->
+      <div id="view-settings" class="view-panel hidden flex-col gap-4 pb-6">
+        <div class="pb-2 border-b border-white/10">
+          <h1 class="text-lg font-black text-white">Settings</h1>
+          <p class="text-[11px] text-gray-400">Account status, offline caching, and audio quality.</p>
+        </div>
+
+        <!-- Spotify-style Offline Cache Toggle -->
+        <div class="card-glass p-4 rounded-xl flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-xs font-bold text-white">Offline Mode</h3>
+                <span class="text-[8px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded font-black uppercase">In-App Only</span>
+              </div>
+              <p class="text-[10px] text-gray-400">Only play songs downloaded to your account (no internet).</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="offline-mode-toggle" class="sr-only peer" onchange="handleOfflineToggle(this)">
+              <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <p class="text-[9px] text-gray-500 italic border-t border-white/5 pt-2">
+            <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Anti-Piracy Protection: Music is encrypted inside your account cache and cannot be copied to device files.
+          </p>
+        </div>
+
+        <!-- Subscription Management Box -->
+        <div class="card-glass p-4 rounded-xl flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-[10px] text-gray-400 uppercase font-black">Current Plan</span>
+              <h4 id="settings-current-plan" class="text-sm font-black text-white">Free Community Plan</h4>
+            </div>
+            <button onclick="openPremiumModal()" class="btn-3d-green text-[10px] font-black px-3 py-1.5 rounded-lg text-black">
+              View Plans
+            </button>
+          </div>
+          <p class="text-[10px] text-gray-400" id="settings-plan-desc">Upgrade to download and stream unlimited AI songs offline in your account.</p>
+        </div>
+
+        <!-- Audio Preferences -->
+        <div class="card-glass p-4 rounded-xl flex flex-col gap-3">
+          <h3 class="text-xs font-bold text-white">Playback Settings</h3>
+          <div class="flex items-center justify-between text-xs text-gray-300">
+            <div>
+              <p class="font-bold text-white text-[11px]">Normalize Volume</p>
+              <p class="text-gray-400 text-[10px]">Same loudness across all AI tracks.</p>
+            </div>
+            <input type="checkbox" checked class="w-4 h-4 accent-emerald-500 cursor-pointer">
+          </div>
+        </div>
       </div>
 
     </main>
+
+    <!-- ================= 3. SPOTIFY PORTRAIT BOTTOM STACK ================= -->
+    <div class="flex-shrink-0 z-40">
+      
+      <!-- MINI AUDIO PLAYER (Docked right above bottom navigation) -->
+      <div class="bg-[#0e111d]/95 border-t border-white/10 px-3 py-2 flex items-center justify-between backdrop-blur-xl">
+        
+        <!-- Track Thumbnail & Info -->
+        <div class="flex items-center gap-2.5 w-3/5 truncate">
+          <div id="player-cover-box" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <i class="fa-solid fa-music text-gray-600 text-sm" id="placeholder-music-icon"></i>
+            <img id="player-cover" src="" class="w-full h-full object-cover hidden">
+          </div>
+          <div class="flex flex-col truncate">
+            <div class="flex items-center gap-1 truncate">
+              <span id="player-title" class="text-white text-xs font-bold truncate">Ready to stream</span>
+              <span id="player-offline-badge" class="hidden text-emerald-400 text-[9px]"><i class="fa-solid fa-circle-down"></i></span>
+            </div>
+            <span id="player-artist" class="text-emerald-400 text-[10px] font-semibold truncate">Upload or pick a song</span>
+          </div>
+        </div>
+
+        <!-- Controls: Prev, Play/Pause, Next & In-App Download Icon -->
+        <div class="flex items-center gap-3">
+          <button id="prev-btn" class="text-gray-400 hover:text-white transition cursor-pointer text-xs">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <button id="play-btn" class="w-8 h-8 rounded-full btn-3d-green text-black flex items-center justify-center cursor-pointer shadow">
+            <i id="play-icon" class="fa-solid fa-play ml-0.5 text-xs"></i>
+          </button>
+          <button id="next-btn" class="text-gray-400 hover:text-white transition cursor-pointer text-xs">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+          
+          <!-- SPOTIFY IN-APP ACCOUNT DOWNLOAD BUTTON -->
+          <button id="player-download-btn" onclick="toggleAccountDownloadCurrent()" title="Download to Account (Offline)" class="text-gray-400 hover:text-emerald-400 text-xs ml-1 cursor-pointer">
+            <i id="player-download-icon" class="fa-solid fa-circle-down"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- PORTRAIT BOTTOM NAVIGATION BAR (Home - Library - Settings) -->
+      <nav class="h-14 bg-[#080911] border-t border-white/5 px-6 flex items-center justify-around">
+        
+        <button id="nav-home" onclick="switchView('home')" class="nav-item flex flex-col items-center gap-1 text-emerald-400 transition cursor-pointer">
+          <i class="fa-solid fa-house text-sm"></i>
+          <span class="text-[10px] font-bold">Home</span>
+        </button>
+
+        <button id="nav-library" onclick="switchView('library')" class="nav-item flex flex-col items-center gap-1 text-gray-400 hover:text-white transition cursor-pointer">
+          <i class="fa-solid fa-book-bookmark text-sm"></i>
+          <span class="text-[10px] font-bold">Library</span>
+        </button>
+
+        <button id="nav-settings" onclick="switchView('settings')" class="nav-item flex flex-col items-center gap-1 text-gray-400 hover:text-white transition cursor-pointer">
+          <i class="fa-solid fa-gear text-sm"></i>
+          <span class="text-[10px] font-bold">Settings</span>
+        </button>
+
+      </nav>
+
+    </div>
+
   </div>
 
-  <!-- ================= 4. NAKA-LOCK NA LOWER MUSIC PLAYER BAR (HINDI NAG-IISCROLL) ================= -->
-  <footer class="h-20 flex-shrink-0 bg-[#080a12]/95 border-t border-white/10 px-5 flex items-center justify-between z-40 backdrop-blur-xl relative">
-    
-    <!-- Left: Now Playing Info -->
-    <div class="flex items-center gap-3 w-1/4 min-w-[200px]">
-      <div id="player-cover-box" class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shadow">
-        <i class="fa-solid fa-music text-gray-600 text-lg" id="placeholder-music-icon"></i>
-        <img id="player-cover" src="" class="w-full h-full object-cover hidden">
-      </div>
-      <div class="flex flex-col truncate">
-        <span id="player-title" class="text-white text-xs font-bold truncate">Standby</span>
-        <div class="flex items-center gap-1.5 text-[10px] text-gray-400 truncate">
-          <span id="player-artist" class="text-emerald-400 font-semibold truncate">Upload a track to play</span>
-          <span id="genre-dot" class="hidden">•</span>
-          <span id="player-genre" class="bg-white/10 px-1 rounded text-[9px] text-gray-300 hidden">Genre</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Center: Playback Controls & Timeline -->
-    <div class="flex flex-col items-center gap-1.5 w-2/4 max-w-lg">
-      <div class="flex items-center gap-5">
-        <button id="prev-btn" class="text-gray-400 hover:text-white transition cursor-pointer">
-          <i class="fa-solid fa-backward-step text-base"></i>
-        </button>
-        <button id="play-btn" class="w-10 h-10 rounded-full btn-3d-green text-black flex items-center justify-center cursor-pointer shadow-lg shadow-emerald-500/20">
-          <i id="play-icon" class="fa-solid fa-play ml-0.5 text-sm"></i>
-        </button>
-        <button id="next-btn" class="text-gray-400 hover:text-white transition cursor-pointer">
-          <i class="fa-solid fa-forward-step text-base"></i>
-        </button>
-      </div>
-
-      <div class="w-full flex items-center gap-2 text-[10px] text-gray-400 font-mono">
-        <span id="current-time">0:00</span>
-        <input type="range" id="seek-bar" value="0" min="0" max="100" class="w-full h-1 bg-white/10 rounded-lg cursor-pointer">
-        <span id="total-duration">0:00</span>
-      </div>
-    </div>
-
-    <!-- Right: Volume & Realtime Revenue Badge -->
-    <div class="flex items-center justify-end gap-3 w-1/4 min-w-[150px]">
-      <div class="hidden lg:flex flex-col text-right pr-3 border-r border-white/10">
-        <span class="text-[9px] text-gray-400 uppercase font-black">Track Earnings</span>
-        <span id="player-revenue" class="text-xs font-black text-emerald-400">₱0.00</span>
-      </div>
-      <button id="mute-btn" class="text-gray-400 hover:text-white cursor-pointer">
-        <i id="volume-icon" class="fa-solid fa-volume-high text-xs"></i>
-      </button>
-      <input type="range" id="volume-bar" value="80" min="0" max="100" class="w-20 h-1 bg-white/10 rounded-lg cursor-pointer">
-    </div>
-  </footer>
-
-  <!-- ================= UPLOAD MODAL WITH COMPREHENSIVE GENRES ================= -->
+  <!-- ================= UPLOAD MODAL (ONLY ONE INSTANCE) ================= -->
   <div id="upload-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
-    <div class="card-glass w-full max-w-lg rounded-2xl p-6 flex flex-col gap-4 border border-white/20">
+    <div class="card-glass w-full max-w-sm rounded-2xl p-5 flex flex-col gap-3.5 border border-white/20">
       
-      <div class="flex justify-between items-center pb-3 border-b border-white/10">
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-folder-plus text-emerald-400 text-lg"></i>
-          <h3 class="text-sm font-black text-white">Upload AI Music to Its Genre Folder</h3>
+          <i class="fa-solid fa-folder-plus text-emerald-400 text-base"></i>
+          <h3 class="text-xs font-black text-white">Upload AI Music to Auto-Folder</h3>
         </div>
-        <button id="close-upload-modal" class="text-gray-400 hover:text-white text-xl cursor-pointer">&times;</button>
+        <button id="close-upload-modal" class="text-gray-400 hover:text-white text-lg cursor-pointer">&times;</button>
       </div>
 
-      <form id="upload-form" class="flex flex-col gap-3 text-xs">
+      <form id="upload-form" class="flex flex-col gap-2.5 text-xs">
         <div>
-          <label class="block text-gray-400 mb-1 font-bold">Song Title</label>
-          <input type="text" id="modal-title" required placeholder="Halimbawa: Pag-ibig sa Dilim" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          <label class="block text-gray-400 mb-1 font-bold text-[10px]">Track Title</label>
+          <input type="text" id="modal-title" required placeholder="e.g. Neon Horizon" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-gray-400 mb-1 font-bold">AI Artist / Creator Name</label>
-            <input type="text" id="modal-artist" required placeholder="Halimbawa: PromptMaker PH" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+            <label class="block text-gray-400 mb-1 font-bold text-[10px]">AI Artist</label>
+            <input type="text" id="modal-artist" required placeholder="e.g. PromptMaker" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
           </div>
 
-          <!-- COMPREHENSIVE GENRE SELECTION -->
           <div>
-            <label class="block text-gray-400 mb-1 font-bold">Pumili ng Genre (Auto-Folder)</label>
-            <select id="modal-genre" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer">
-              <option value="" disabled selected>-- Pumili ng Genre --</option>
+            <label class="block text-gray-400 mb-1 font-bold text-[10px]">Genre (Auto-Folder)</label>
+            <select id="modal-genre" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 text-xs cursor-pointer">
+              <option value="" disabled selected>-- Genre --</option>
               <option value="Pop Rock">Pop Rock</option>
               <option value="Rock">Rock</option>
               <option value="Ballad">Ballad</option>
               <option value="Reggae">Reggae</option>
-              <option value="Metal">Heavy Metal</option>
+              <option value="Heavy Metal">Heavy Metal</option>
               <option value="Hip-Hop & Rap">Hip-Hop & Rap</option>
               <option value="Pinoy OPM AI">🇵🇭 Pinoy OPM AI</option>
               <option value="Pop">Pop</option>
@@ -323,169 +387,242 @@
         </div>
 
         <div>
-          <label class="block text-gray-400 mb-1 font-bold">AI Prompt / Model Used</label>
-          <input type="text" id="modal-prompt" placeholder="Halimbawa: Suno v3.5, 90s Manila alternative rock, distorted guitars" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          <label class="block text-gray-400 mb-1 font-bold text-[10px]">AI Prompt & Model</label>
+          <input type="text" id="modal-prompt" placeholder="e.g. Suno v3.5, 90s alternative rock" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-gray-400 mb-1 font-bold">MP3 Audio File</label>
-            <input type="file" id="modal-audio" accept="audio/*" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-gray-400 text-[11px] file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-500/20 file:text-emerald-400 cursor-pointer">
+            <label class="block text-gray-400 mb-1 font-bold text-[10px]">MP3 File</label>
+            <input type="file" id="modal-audio" accept="audio/*" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-1.5 text-gray-400 text-[10px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:font-bold file:bg-emerald-500/20 file:text-emerald-400 cursor-pointer">
           </div>
           <div>
-            <label class="block text-gray-400 mb-1 font-bold">Cover Image (Optional)</label>
-            <input type="file" id="modal-cover" accept="image/*" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-gray-400 text-[11px] file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-indigo-500/20 file:text-indigo-400 cursor-pointer">
+            <label class="block text-gray-400 mb-1 font-bold text-[10px]">Cover Artwork</label>
+            <input type="file" id="modal-cover" accept="image/*" class="w-full bg-[#111422] border border-white/10 rounded-xl p-1.5 text-gray-400 text-[10px] file:mr-1 file:py-0.5 file:px-1.5 file:rounded file:border-0 file:text-[9px] file:font-bold file:bg-indigo-500/20 file:text-indigo-400 cursor-pointer">
           </div>
         </div>
 
-        <div class="pt-3 flex justify-end gap-2 border-t border-white/10">
-          <button type="button" id="cancel-upload" class="px-4 py-2 rounded-xl text-gray-400 hover:text-white font-bold cursor-pointer">Cancel</button>
-          <button type="submit" class="btn-3d-green px-5 py-2 rounded-xl text-black font-black cursor-pointer">Auto-Create Genre Folder & Publish</button>
+        <div class="pt-2 flex justify-end gap-2 border-t border-white/10">
+          <button type="button" id="cancel-upload" class="px-3 py-1.5 rounded-lg text-gray-400 font-bold text-xs cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-3d-green px-4 py-1.5 rounded-lg text-black font-black text-xs cursor-pointer">Publish</button>
         </div>
       </form>
 
     </div>
   </div>
 
+  <!-- ================= DEMO PREMIUM MODAL (₱99/WEEK & ₱199/MO) ================= -->
+  <div id="premium-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="card-glass w-full max-w-sm rounded-2xl p-5 flex flex-col gap-4 border border-amber-500/30">
+      
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
+        <div class="flex items-center gap-1.5 text-amber-400 font-black text-xs">
+          <i class="fa-solid fa-crown"></i>
+          <span>PROMPTWAVE PREMIUM</span>
+        </div>
+        <button onclick="closePremiumModal()" class="text-gray-400 hover:text-white text-lg cursor-pointer">&times;</button>
+      </div>
+
+      <div class="text-center flex flex-col gap-1">
+        <h3 class="text-base font-black text-white">Stream Unlimited & Download</h3>
+        <p class="text-[11px] text-gray-400 leading-tight">Save songs to your account for offline listening anywhere without using mobile data.</p>
+      </div>
+
+      <!-- Plan Options -->
+      <div class="flex flex-col gap-2.5">
+        
+        <!-- Plan 1: ₱99 / Weekly -->
+        <div class="p-3 rounded-xl border border-white/15 bg-white/5 hover:border-emerald-500 transition cursor-pointer flex justify-between items-center" onclick="activateDemoPlan('Weekly Pass', '₱99 / week')">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white">Weekly Pass</span>
+              <span class="text-[8px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 rounded">POPULAR</span>
+            </div>
+            <p class="text-[10px] text-gray-400">Unlimited Streams • In-App Offline Mode</p>
+          </div>
+          <span class="text-sm font-black text-emerald-400">₱99</span>
+        </div>
+
+        <!-- Plan 2: ₱199 / Monthly -->
+        <div class="p-3 rounded-xl border border-amber-500/40 bg-amber-500/10 hover:border-amber-400 transition cursor-pointer flex justify-between items-center" onclick="activateDemoPlan('Monthly Pro', '₱199 / month')">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black text-white">Monthly Pro</span>
+              <span class="text-[8px] bg-amber-500 text-black font-extrabold px-1.5 rounded">BEST VALUE</span>
+            </div>
+            <p class="text-[10px] text-gray-300">Unlimited Streams • Offline • Studio Audio</p>
+          </div>
+          <span class="text-sm font-black text-amber-400">₱199</span>
+        </div>
+
+      </div>
+
+      <p class="text-[9px] text-center text-gray-500">
+        <i class="fa-solid fa-lock text-[8px]"></i> Demo Mode: Click any plan to simulate immediate VIP activation.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- ================= DEMO GOOGLE LOGIN MODAL ================= -->
+  <div id="login-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="card-glass w-full max-w-xs rounded-2xl p-5 flex flex-col gap-4 border border-white/20 text-center">
+      <div class="flex justify-between items-center pb-2 border-b border-white/10">
+        <span class="text-xs font-bold text-gray-400">Identity Sign In</span>
+        <button onclick="closeLoginModal()" class="text-gray-400 hover:text-white text-lg">&times;</button>
+      </div>
+
+      <div class="flex flex-col items-center gap-1.5">
+        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow">
+          <i class="fa-brands fa-google text-xl text-red-500"></i>
+        </div>
+        <h3 class="text-sm font-black text-white">Sign In with Google</h3>
+        <p class="text-[11px] text-gray-400">Sign in to sync your in-app downloaded songs and track earnings.</p>
+      </div>
+
+      <button onclick="simulateGoogleLogin()" class="btn-3d-dark py-2 px-3 rounded-xl flex items-center justify-center gap-2 text-xs font-bold text-white hover:border-emerald-500 transition cursor-pointer">
+        <i class="fa-brands fa-google text-red-400"></i>
+        <span>Continue with Google</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- NATIVE AUDIO ENGINE -->
   <audio id="audio-engine" preload="metadata"></audio>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- ================= SCRIPT LOGIC ================= -->
   <script>
-    // 100% BLANKO NA SA SIMULA (Walang hardcoded sample tracks)
+    // App State
     let songs = [];
-
+    let downloadedSongIds = new Set(); // Stores songs downloaded inside user's account
     let currentSongIndex = -1;
     let isPlaying = false;
-    const STREAM_RATE = 0.15; // ₱0.15 bawat play
+    let currentUser = null;
+    let isPremium = false;
+    let currentPlanName = "Free Community";
+    let isOfflineModeActive = false;
+    let onlyShowDownloadedInLibrary = false;
 
-    // DOM Elements
+    // Elements
     const audio = document.getElementById("audio-engine");
     const playBtn = document.getElementById("play-btn");
     const playIcon = document.getElementById("play-icon");
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
-    const seekBar = document.getElementById("seek-bar");
-    const currentTimeEl = document.getElementById("current-time");
-    const totalDurationEl = document.getElementById("total-duration");
-    const volumeBar = document.getElementById("volume-bar");
-    const volumeIcon = document.getElementById("volume-icon");
     const foldersContainer = document.getElementById("genre-folders-container");
-
-    // Stats
-    const totalTracksCountEl = document.getElementById("total-tracks-count");
-    const activeFoldersCountEl = document.getElementById("active-folders-count");
-    const totalCommunityEarningsEl = document.getElementById("total-community-earnings");
 
     // Player Elements
     const playerTitle = document.getElementById("player-title");
     const playerArtist = document.getElementById("player-artist");
-    const playerGenre = document.getElementById("player-genre");
     const playerCover = document.getElementById("player-cover");
-    const playerRevenue = document.getElementById("player-revenue");
     const placeholderIcon = document.getElementById("placeholder-music-icon");
-    const genreDot = document.getElementById("genre-dot");
+    const playerOfflineBadge = document.getElementById("player-offline-badge");
+    const playerDownloadIcon = document.getElementById("player-download-icon");
 
-    // Modal Elements
-    const uploadModal = document.getElementById("upload-modal");
-    const openUploadBtn = document.getElementById("open-upload-modal");
-    const closeUploadBtn = document.getElementById("close-upload-modal");
-    const cancelUploadBtn = document.getElementById("cancel-upload");
-    const uploadForm = document.getElementById("upload-form");
+    // Dynamic Time Greeting
+    function updateGreeting() {
+      const hour = new Date().getHours();
+      const el = document.getElementById("greeting-title");
+      if (hour < 12) el.innerText = "Good Morning";
+      else if (hour < 18) el.innerText = "Good Afternoon";
+      else el.innerText = "Good Evening";
+    }
 
-    // RENDER HOMEPAGE DYNAMIC GENRE FOLDERS
+    // Portrait Tab Switcher
+    function switchView(viewName) {
+      document.querySelectorAll(".view-panel").forEach(panel => panel.classList.add("hidden"));
+      document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.classList.remove("text-emerald-400");
+        btn.classList.add("text-gray-400");
+      });
+
+      if (viewName === 'home') {
+        document.getElementById("view-home").classList.remove("hidden");
+        document.getElementById("nav-home").classList.replace("text-gray-400", "text-emerald-400");
+      } else if (viewName === 'library') {
+        document.getElementById("view-library").classList.remove("hidden");
+        document.getElementById("nav-library").classList.replace("text-gray-400", "text-emerald-400");
+        renderLibrary();
+      } else if (viewName === 'settings') {
+        document.getElementById("view-settings").classList.remove("hidden");
+        document.getElementById("nav-settings").classList.replace("text-gray-400", "text-emerald-400");
+      }
+    }
+
+    // Render Auto-Genre Folders on Home
     function renderGenreFolders(list = songs) {
       foldersContainer.innerHTML = "";
-      totalTracksCountEl.innerText = `${songs.length} Songs`;
 
-      // Update total community earnings
-      const totalEarnings = songs.reduce((acc, curr) => acc + (curr.plays * STREAM_RATE), 0);
-      totalCommunityEarningsEl.innerText = totalEarnings.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
-
-      // EMPTY STATE: Kapag wala pang in-upload na kanta
       if (list.length === 0) {
-        activeFoldersCountEl.innerText = "0 Folders";
         foldersContainer.innerHTML = `
-          <div class="card-glass rounded-3xl p-12 text-center flex flex-col items-center justify-center gap-4 border border-dashed border-white/20">
-            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl shadow-lg">
+          <div class="card-glass rounded-2xl p-8 text-center flex flex-col items-center justify-center gap-3 border border-dashed border-white/20">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl shadow">
               <i class="fa-solid fa-folder-open"></i>
             </div>
-            <div class="max-w-md">
-              <h3 class="text-lg font-black text-white">Walang Kanta sa Homepage</h3>
-              <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                Blangko pa ang site boss! Mag-upload ng sariling AI song gamit ang button sa itaas. Pagkapili mo ng genre (tulad ng <b>Pop Rock, Ballad, Reggae, o Metal</b>), awtomatikong lilitaw ang Folder dito!
+            <div class="max-w-xs">
+              <h3 class="text-sm font-black text-white">Your Feed is Blank</h3>
+              <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">
+                Click <b>UPLOAD</b> at the top to publish your AI track. It will automatically generate its Genre Folder here.
               </p>
             </div>
-            <button onclick="document.getElementById('open-upload-modal').click()" class="btn-3d-green text-xs font-black px-6 py-3 rounded-xl text-black flex items-center gap-2 cursor-pointer mt-2">
-              <i class="fa-solid fa-cloud-arrow-up"></i> Mag-Upload ng Unang AI Song
-            </button>
           </div>
         `;
         return;
       }
 
-      // Group songs automatically by Genre
+      // Group tracks by Genre
       const groupedByGenre = list.reduce((acc, song) => {
         acc[song.genre] = acc[song.genre] || [];
         acc[song.genre].push(song);
         return acc;
       }, {});
 
-      const genreKeys = Object.keys(groupedByGenre);
-      activeFoldersCountEl.innerText = `${genreKeys.length} Folders`;
-
-      // Gumawa ng Folder Section para sa bawat Genre na may laman
-      genreKeys.forEach(genreName => {
+      Object.keys(groupedByGenre).forEach(genreName => {
         const songsInGenre = groupedByGenre[genreName];
-
         const folderSection = document.createElement("section");
-        folderSection.className = "flex flex-col gap-3";
+        folderSection.className = "flex flex-col gap-2.5";
 
-        // FOLDER HEADER (May folder icon at bilang ng kanta)
         folderSection.innerHTML = `
-          <div class="flex items-center justify-between px-1">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                <i class="fa-solid fa-folder-closed text-sm"></i>
-              </div>
-              <h2 class="text-base font-black text-white tracking-wide flex items-center gap-2">
-                ${genreName} Folder
-                <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-emerald-300 font-mono font-bold">${songsInGenre.length} song(s)</span>
-              </h2>
-            </div>
+          <div class="flex items-center gap-2 px-1">
+            <i class="fa-solid fa-folder-closed text-emerald-400 text-xs"></i>
+            <h2 class="text-xs font-black text-white tracking-wide uppercase flex items-center gap-2">
+              ${genreName} Folder
+              <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded-full text-emerald-300 font-mono font-bold">${songsInGenre.length} track(s)</span>
+            </h2>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" id="folder-tracks-${genreName.replace(/\s+/g, '-')}">
+          <div class="flex flex-col gap-2" id="folder-tracks-${genreName.replace(/\s+/g, '-')}">
           </div>
         `;
 
         const tracksContainer = folderSection.querySelector(`#folder-tracks-${genreName.replace(/\s+/g, '-')}`);
 
-        // Ilagay ang bawat kanta sa ilalim ng kanyang Genre Folder
         songsInGenre.forEach(song => {
+          const isDownloaded = downloadedSongIds.has(song.id);
           const card = document.createElement("div");
-          card.className = "card-glass flex items-center justify-between p-3.5 rounded-2xl cursor-pointer group";
-          
-          const estRevenue = (song.plays * STREAM_RATE).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+          card.className = "card-glass flex items-center justify-between p-2.5 rounded-xl cursor-pointer group";
 
           card.innerHTML = `
-            <div class="flex items-center gap-3.5 truncate">
-              <img src="${song.cover}" class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow flex-shrink-0">
+            <div class="flex items-center gap-2.5 truncate">
+              <img src="${song.cover}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shadow flex-shrink-0">
               <div class="truncate">
-                <p class="font-bold text-white text-xs truncate group-hover:text-emerald-300 transition">${song.title}</p>
-                <div class="flex items-center gap-1.5 text-[10px] text-gray-400 mt-0.5">
+                <div class="flex items-center gap-1.5 truncate">
+                  <p class="font-bold text-white text-xs truncate group-hover:text-emerald-300 transition">${song.title}</p>
+                  ${isDownloaded ? '<i class="fa-solid fa-circle-down text-emerald-400 text-[10px]" title="Downloaded in Account"></i>' : ''}
+                </div>
+                <div class="flex items-center gap-1.5 text-[10px] text-gray-400">
                   <span class="text-emerald-400 font-semibold">${song.artist}</span>
                   <span>•</span>
-                  <span class="truncate text-gray-500 max-w-[130px]">${song.prompt}</span>
+                  <span class="truncate text-gray-500 max-w-[120px]">${song.prompt}</span>
                 </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-3 text-xs font-mono flex-shrink-0">
-              <div class="flex flex-col text-right">
-                <span class="text-gray-400 text-[10px]">${song.plays.toLocaleString()} plays</span>
-                <span class="text-emerald-400 text-[10px] font-bold">${estRevenue}</span>
-              </div>
-              <button class="w-9 h-9 rounded-xl bg-white/5 group-hover:bg-emerald-500 group-hover:text-black flex items-center justify-center transition shadow">
-                <i class="fa-solid fa-play text-xs ml-0.5"></i>
+            <div class="flex items-center gap-2.5 text-xs font-mono flex-shrink-0">
+              <button onclick="event.stopPropagation(); toggleSongDownload(${song.id})" class="w-7 h-7 rounded-lg text-gray-400 hover:text-emerald-400 flex items-center justify-center transition">
+                <i class="fa-solid fa-circle-down ${isDownloaded ? 'text-emerald-400' : 'text-gray-500'}"></i>
+              </button>
+              <button class="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-emerald-500 group-hover:text-black flex items-center justify-center transition shadow">
+                <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
               </button>
             </div>
           `;
@@ -502,34 +639,146 @@
       });
     }
 
-    // Play Track Function
+    // Render Library View
+    function renderLibrary() {
+      const container = document.getElementById("library-songs-container");
+      container.innerHTML = "";
+
+      let listToRender = songs;
+      if (onlyShowDownloadedInLibrary) {
+        listToRender = songs.filter(s => downloadedSongIds.has(s.id));
+      }
+
+      if (listToRender.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <p class="text-xs font-bold">${onlyShowDownloadedInLibrary ? "No offline downloaded tracks found." : "Your library is empty."}</p>
+            <p class="text-[10px] mt-0.5">Save songs to your account or upload new ones!</p>
+          </div>
+        `;
+        return;
+      }
+
+      listToRender.forEach((song, idx) => {
+        const isDownloaded = downloadedSongIds.has(song.id);
+        const item = document.createElement("div");
+        item.className = "card-glass p-2.5 rounded-xl flex items-center justify-between cursor-pointer";
+        item.innerHTML = `
+          <div class="flex items-center gap-2.5 truncate">
+            <img src="${song.cover}" class="w-9 h-9 rounded-lg object-cover">
+            <div class="truncate">
+              <div class="flex items-center gap-1.5 truncate">
+                <p class="text-xs font-bold text-white truncate">${song.title}</p>
+                ${isDownloaded ? '<i class="fa-solid fa-circle-down text-emerald-400 text-[10px]"></i>' : ''}
+              </div>
+              <p class="text-[10px] text-gray-400 truncate">${song.artist} • <span class="text-emerald-400">${song.genre}</span></p>
+            </div>
+          </div>
+          <button onclick="playSong(${songs.findIndex(s => s.id === song.id)})" class="w-7 h-7 rounded-full bg-emerald-500 text-black flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function toggleLibraryOfflineFilter() {
+      onlyShowDownloadedInLibrary = !onlyShowDownloadedInLibrary;
+      const btn = document.getElementById("filter-offline-btn");
+      if (onlyShowDownloadedInLibrary) {
+        btn.className = "text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500 bg-emerald-500/20 text-emerald-300 flex items-center gap-1 cursor-pointer";
+      } else {
+        btn.className = "text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer";
+      }
+      renderLibrary();
+    }
+
+    // Play Track
     function playSong(index) {
       if (index < 0 || index >= songs.length) return;
       currentSongIndex = index;
       const song = songs[index];
 
-      // Dagdag sa plays & earnings
+      // Check if Offline Mode is on and track is NOT downloaded
+      if (isOfflineModeActive && !downloadedSongIds.has(song.id)) {
+        alert("Offline Mode is active! You can only play songs saved to your account. Disable offline mode or download this track first.");
+        return;
+      }
+
       song.plays += 1;
 
       audio.src = song.src;
       playerTitle.innerText = song.title;
-      playerArtist.innerText = song.artist;
-      playerGenre.innerText = song.genre;
+      playerArtist.innerText = `${song.artist} (${song.genre})`;
       playerCover.src = song.cover;
 
-      // Unhide cover image and genre badge
       placeholderIcon.classList.add("hidden");
       playerCover.classList.remove("hidden");
-      playerGenre.classList.remove("hidden");
-      genreDot.classList.remove("hidden");
 
-      const earned = (song.plays * STREAM_RATE).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
-      playerRevenue.innerText = earned;
+      updatePlayerDownloadStatus();
 
       audio.play();
       isPlaying = true;
-      playIcon.className = "fa-solid fa-pause text-sm";
+      playIcon.className = "fa-solid fa-pause text-xs";
       renderGenreFolders();
+    }
+
+    // Update Player In-App Download Icon
+    function updatePlayerDownloadStatus() {
+      if (currentSongIndex === -1) return;
+      const song = songs[currentSongIndex];
+      const isDownloaded = downloadedSongIds.has(song.id);
+
+      if (isDownloaded) {
+        playerDownloadIcon.className = "fa-solid fa-circle-down text-emerald-400";
+        playerOfflineBadge.classList.remove("hidden");
+      } else {
+        playerDownloadIcon.className = "fa-solid fa-circle-down text-gray-400";
+        playerOfflineBadge.classList.add("hidden");
+      }
+    }
+
+    // Toggle In-App Account Download for specific track
+    function toggleSongDownload(songId) {
+      if (!isPremium) {
+        openPremiumModal();
+        return;
+      }
+
+      if (downloadedSongIds.has(songId)) {
+        downloadedSongIds.delete(songId);
+        alert("Removed from Account Offline Cache.");
+      } else {
+        downloadedSongIds.add(songId);
+        alert("Downloaded to Account! You can now listen offline inside PromptWave without internet.");
+      }
+
+      renderGenreFolders();
+      if (!document.getElementById("view-library").classList.contains("hidden")) {
+        renderLibrary();
+      }
+      updatePlayerDownloadStatus();
+    }
+
+    function toggleAccountDownloadCurrent() {
+      if (currentSongIndex === -1) return alert("Select a song first!");
+      toggleSongDownload(songs[currentSongIndex].id);
+    }
+
+    // Settings Offline Mode Toggle
+    function handleOfflineToggle(cb) {
+      if (!isPremium) {
+        cb.checked = false;
+        openPremiumModal();
+        return;
+      }
+
+      isOfflineModeActive = cb.checked;
+      if (isOfflineModeActive) {
+        alert("Offline Mode Active: You will only stream songs downloaded inside your account.");
+      } else {
+        alert("Offline Mode Disabled: Online streaming restored.");
+      }
     }
 
     // Play / Pause Toggle
@@ -542,14 +791,14 @@
       if (isPlaying) {
         audio.pause();
         isPlaying = false;
-        playIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+        playIcon.className = "fa-solid fa-play ml-0.5 text-xs";
       } else {
         if (!audio.src || currentSongIndex === -1) {
           playSong(0);
         } else {
           audio.play();
           isPlaying = true;
-          playIcon.className = "fa-solid fa-pause text-sm";
+          playIcon.className = "fa-solid fa-pause text-xs";
         }
       }
     });
@@ -566,35 +815,7 @@
       playSong(currentSongIndex);
     });
 
-    // Seek Timeline Tracking
-    audio.addEventListener("timeupdate", () => {
-      if (audio.duration) {
-        seekBar.value = (audio.currentTime / audio.duration) * 100;
-        currentTimeEl.innerText = formatTime(audio.currentTime);
-        totalDurationEl.innerText = formatTime(audio.duration);
-      }
-    });
-
-    seekBar.addEventListener("input", () => {
-      if (audio.duration) {
-        audio.currentTime = (seekBar.value / 100) * audio.duration;
-      }
-    });
-
     audio.addEventListener("ended", () => nextBtn.click());
-
-    // Volume
-    volumeBar.addEventListener("input", (e) => {
-      audio.volume = e.target.value / 100;
-      volumeIcon.className = audio.volume === 0 ? "fa-solid fa-volume-xmark text-red-500" : "fa-solid fa-volume-high";
-    });
-
-    function formatTime(sec) {
-      if (isNaN(sec)) return "0:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
-    }
 
     // Search Engine Filter
     document.getElementById("search-input").addEventListener("input", (e) => {
@@ -608,26 +829,25 @@
       renderGenreFolders(filtered);
     });
 
-    // Modal Handlers
-    openUploadBtn.addEventListener("click", () => uploadModal.classList.replace("hidden", "flex"));
-    closeUploadBtn.addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
-    cancelUploadBtn.addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
+    // Upload Modal Handling
+    const uploadModal = document.getElementById("upload-modal");
+    document.getElementById("open-upload-modal").addEventListener("click", () => uploadModal.classList.replace("hidden", "flex"));
+    document.getElementById("close-upload-modal").addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
+    document.getElementById("cancel-upload").addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
 
-    // HANDLE UPLOAD WITH AUTOMATIC GENRE FOLDER CREATION
-    uploadForm.addEventListener("submit", (e) => {
+    document.getElementById("upload-form").addEventListener("submit", (e) => {
       e.preventDefault();
 
       const title = document.getElementById("modal-title").value;
       const artist = document.getElementById("modal-artist").value;
       const genre = document.getElementById("modal-genre").value;
-      const prompt = document.getElementById("modal-prompt").value || "Generative AI Prompt";
+      const prompt = document.getElementById("modal-prompt").value || "AI Audio Model";
       const audioFile = document.getElementById("modal-audio").files[0];
       const coverFile = document.getElementById("modal-cover").files[0];
 
-      if (!genre) return alert("Paki-pili ang genre ng iyong kanta!");
-      if (!audioFile) return alert("Paki-pili ang iyong MP3 audio file!");
+      if (!genre) return alert("Please select a genre for auto-folder sorting!");
+      if (!audioFile) return alert("Please select an audio file!");
 
-      // Lumikha ng native browser blob URL
       const audioUrl = URL.createObjectURL(audioFile);
       const coverUrl = coverFile 
         ? URL.createObjectURL(coverFile) 
@@ -644,22 +864,60 @@
         src: audioUrl
       };
 
-      // Ipasok ang bagong kanta sa simula ng array
       songs.unshift(newSong);
-
-      // Isara ang modal at i-reset ang form
       uploadModal.classList.replace("flex", "hidden");
-      uploadForm.reset();
+      document.getElementById("upload-form").reset();
 
-      // I-render muli: Awtomatikong lilitaw ang Genre Folder nito sa homepage!
       renderGenreFolders();
-
-      // Agad patugtugin ang in-upload na kanta
+      switchView('home');
       playSong(0);
     });
 
-    // Start-up initialization
+    // Demo Google Login
+    const loginModal = document.getElementById("login-modal");
+    function openLoginModal() { loginModal.classList.replace("hidden", "flex"); }
+    function closeLoginModal() { loginModal.classList.replace("flex", "hidden"); }
+
+    function simulateGoogleLogin() {
+      currentUser = {
+        name: "Creator User",
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100"
+      };
+
+      document.getElementById("auth-container").innerHTML = `
+        <div class="flex items-center gap-1.5 bg-[#171b2d] border border-emerald-500/30 rounded-lg px-2 py-1 shadow">
+          <img src="${currentUser.avatar}" class="w-5 h-5 rounded-full object-cover">
+          <span class="text-[10px] font-bold text-white">${currentUser.name}</span>
+        </div>
+      `;
+      closeLoginModal();
+    }
+
+    // Demo Premium Modal (₱99/week & ₱199/month)
+    const premiumModal = document.getElementById("premium-modal");
+    function openPremiumModal() { premiumModal.classList.replace("hidden", "flex"); }
+    function closePremiumModal() { premiumModal.classList.replace("flex", "hidden"); }
+
+    function activateDemoPlan(planName, priceTag) {
+      isPremium = true;
+      currentPlanName = planName;
+
+      // Update Header Badge
+      const headerBadge = document.getElementById("header-plan-badge");
+      headerBadge.innerText = planName === 'Weekly Pass' ? 'VIP WEEKLY' : 'VIP MONTHLY';
+      headerBadge.className = "text-[8px] bg-gradient-to-r from-amber-500 to-amber-400 text-black font-extrabold px-1.5 py-0.2 rounded shadow cursor-pointer";
+
+      // Update Settings Display
+      document.getElementById("settings-current-plan").innerText = `${planName} (${priceTag}) - Active`;
+      document.getElementById("settings-plan-desc").innerText = "You have unlimited streaming and account-only offline downloads enabled.";
+
+      closePremiumModal();
+      alert(`🎉 Demo Subscription Activated: ${planName} (${priceTag})! Account-only offline downloads are now unlocked.`);
+    }
+
+    // Startup
     window.addEventListener("DOMContentLoaded", () => {
+      updateGreeting();
       renderGenreFolders();
       audio.volume = 0.8;
     });
