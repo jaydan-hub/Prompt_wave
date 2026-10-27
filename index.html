@@ -3,89 +3,154 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PromptWave | AI Music Streaming</title>
+  <title>PromptWave | Next-Gen AI Music Experience</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome 6 CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* Full Viewport Lock to Prevent Page Jitter */
+    /* Full Lock Viewport */
     html, body {
       height: 100%;
       width: 100%;
       overflow: hidden;
-      background-color: #07090e;
+      background-color: #05060a;
     }
 
-    /* Ambient Glowing Blurred Backdrop */
-    .ambient-glow-wrapper {
+    /* Interactive Background Canvas */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Flowing Aurora Cosmic Background */
+    .aurora-bg {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 0;
       overflow: hidden;
-    }
-    .blur-orb-emerald {
-      position: absolute;
-      top: -10%;
-      left: 10%;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.22), transparent 70%);
-      filter: blur(90px);
-    }
-    .blur-orb-indigo {
-      position: absolute;
-      bottom: -10%;
-      right: 5%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent 70%);
-      filter: blur(100px);
+      background: radial-gradient(circle at 50% 50%, #070913 0%, #030407 100%);
     }
 
-    /* 3D Glass Cards */
+    .aurora-beam-1 {
+      position: absolute;
+      top: -20%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.28) 0%, transparent 65%);
+      filter: blur(100px);
+      animation: floatSlow 18s ease-in-out infinite alternate;
+    }
+
+    .aurora-beam-2 {
+      position: absolute;
+      bottom: -15%;
+      right: -10%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 65%);
+      filter: blur(110px);
+      animation: floatSlow 22s ease-in-out infinite alternate-reverse;
+    }
+
+    .aurora-beam-3 {
+      position: absolute;
+      top: 35%;
+      left: 30%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.16) 0%, transparent 65%);
+      filter: blur(120px);
+      animation: pulseGlow 12s ease-in-out infinite;
+    }
+
+    @keyframes floatSlow {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.15); }
+      100% { transform: translate(-40px, 80px) scale(0.95); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.2); }
+    }
+
+    /* Ultra Glassmorphic Containers */
     .card-glass {
-      background: rgba(16, 20, 32, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(14, 18, 30, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .card-glass:hover {
-      background: rgba(22, 28, 48, 0.85);
-      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(20, 26, 44, 0.85);
+      border-color: rgba(16, 185, 129, 0.45);
+      box-shadow: 0 14px 35px -5px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.2);
       transform: translateY(-2px);
     }
 
     /* 3D Tactile Buttons */
     .btn-3d-green {
       background: linear-gradient(180deg, #10b981 0%, #059669 100%);
-      box-shadow: 0 4px 0 #047857, 0 8px 16px rgba(16, 185, 129, 0.35);
+      box-shadow: 0 4px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.4);
       transition: all 0.12s ease;
     }
     .btn-3d-green:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 0 #047857, 0 10px 18px rgba(16, 185, 129, 0.45);
+      box-shadow: 0 6px 0 #047857, 0 12px 22px rgba(16, 185, 129, 0.55);
     }
     .btn-3d-green:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 #047857, 0 4px 6px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 1px 0 #047857, 0 4px 8px rgba(16, 185, 129, 0.2);
     }
 
     .btn-3d-dark {
-      background: linear-gradient(180deg, #1c2236 0%, #131726 100%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 3px 0 #0a0d17;
+      background: linear-gradient(180deg, #1b2034 0%, #121524 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 3px 0 #090b14;
       transition: all 0.12s ease;
     }
     .btn-3d-dark:active {
       transform: translateY(2px);
-      box-shadow: 0 1px 0 #0a0d17;
+      box-shadow: 0 1px 0 #090b14;
     }
 
-    /* Custom Slim Scrollbar for middle feed only */
+    /* Vinyl Spinning Disc Animation */
+    @keyframes spinDisc {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .vinyl-spinning {
+      animation: spinDisc 6s linear infinite;
+    }
+
+    /* Equalizer Sound Waves Bars */
+    .eq-bar {
+      width: 2.5px;
+      background: #10b981;
+      border-radius: 99px;
+      animation: bounceEQ 0.8s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { height: 14px; animation-delay: 0.1s; }
+    .eq-bar:nth-child(2) { height: 8px;  animation-delay: 0.3s; }
+    .eq-bar:nth-child(3) { height: 16px; animation-delay: 0.2s; }
+    .eq-bar:nth-child(4) { height: 10px; animation-delay: 0.4s; }
+
+    @keyframes bounceEQ {
+      0% { transform: scaleY(0.3); }
+      100% { transform: scaleY(1.3); }
+    }
+
+    /* Custom Scrollbar */
     .custom-scroll::-webkit-scrollbar {
       width: 4px;
     }
@@ -104,34 +169,38 @@
 </head>
 <body class="text-gray-100 flex flex-col font-sans select-none antialiased relative">
 
-  <!-- ATMOSPHERIC BLURRED BACKGROUND -->
-  <div class="ambient-glow-wrapper">
-    <div class="blur-orb-emerald"></div>
-    <div class="blur-orb-indigo"></div>
+  <!-- LAYER 1: AURORA COSMIC GLOW -->
+  <div class="aurora-bg">
+    <div class="aurora-beam-1"></div>
+    <div class="aurora-beam-2"></div>
+    <div class="aurora-beam-3"></div>
   </div>
 
-  <!-- PORTRAIT APP SHELL WRAPPER -->
+  <!-- LAYER 2: INTERACTIVE NEURAL PARTICLE CANVAS -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- PORTRAIT APP SHELL -->
   <div class="w-full max-w-md md:max-w-2xl lg:max-w-4xl mx-auto h-full flex flex-col justify-between relative z-10">
 
     <!-- ================= 1. LOCKED TOP HEADER ================= -->
-    <header class="h-14 flex-shrink-0 bg-[#0c0e18]/90 backdrop-blur-md border-b border-white/10 px-4 flex items-center justify-between z-40">
+    <header class="h-14 flex-shrink-0 bg-[#0a0d16]/80 backdrop-blur-xl border-b border-white/10 px-4 flex items-center justify-between z-40">
       
-      <!-- Brand Logo -->
-      <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('home')">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow">
+      <!-- Logo -->
+      <div class="flex items-center gap-2 cursor-pointer group" onclick="switchView('home')">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-400 via-teal-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-105 transition">
           <i class="fa-solid fa-wave-square text-xs text-white"></i>
         </div>
-        <div class="flex items-center gap-1">
-          <span class="text-base font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-indigo-300">
+        <div class="flex items-center gap-1.5">
+          <span class="text-base font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-indigo-300">
             PROMPT<span class="text-white">WAVE</span>
           </span>
-          <span id="header-plan-badge" onclick="openPremiumModal()" class="text-[9px] bg-white/10 text-gray-300 border border-white/10 px-1.5 py-0.2 rounded font-bold cursor-pointer hover:border-emerald-500 transition">FREE</span>
+          <span id="header-plan-badge" onclick="openPremiumModal()" class="text-[9px] bg-white/10 text-gray-300 border border-white/10 px-1.5 py-0.2 rounded font-black cursor-pointer hover:border-emerald-500 transition shadow">FREE</span>
         </div>
       </div>
 
-      <!-- Action Area: ONLY ONE UPLOAD BUTTON + GOOGLE SIGN-IN -->
+      <!-- Action Area: ONLY ONE UPLOAD BUTTON + GOOGLE LOGIN -->
       <div class="flex items-center gap-2">
-        <!-- THE SOLE UPLOAD BUTTON -->
+        <!-- SINGLE UPLOAD BUTTON -->
         <button id="open-upload-modal" class="btn-3d-green text-[11px] font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-black cursor-pointer">
           <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
           <span>UPLOAD</span>
@@ -148,47 +217,48 @@
     </header>
 
     <!-- ================= 2. MIDDLE SCROLLABLE FEED ================= -->
-    <main class="flex-1 overflow-y-auto custom-scroll p-4 flex flex-col gap-5" id="main-scroll-feed">
+    <main class="flex-1 overflow-y-auto custom-scroll p-4 flex flex-col gap-4" id="main-scroll-feed">
 
       <!-- ================= VIEW 1: HOME ================= -->
       <div id="view-home" class="view-panel flex flex-col gap-4">
         
-        <!-- Search Bar -->
-        <div class="flex items-center bg-[#131625] border border-white/10 rounded-xl px-3.5 py-2 focus-within:border-emerald-500/80 transition">
+        <!-- Search Engine -->
+        <div class="flex items-center bg-[#101424]/80 backdrop-blur-md border border-white/10 rounded-xl px-3.5 py-2 focus-within:border-emerald-500/80 transition shadow-inner">
           <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2 text-xs"></i>
-          <input type="text" id="search-input" placeholder="Search tracks, AI creators, prompts..." class="bg-transparent border-none text-xs text-white focus:outline-none w-full placeholder-gray-500">
+          <input type="text" id="search-input" placeholder="Search prompts, artists, or genres..." class="bg-transparent border-none text-xs text-white focus:outline-none w-full placeholder-gray-500">
         </div>
 
-        <!-- Greeting & Demo Premium Promotion Banner -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900/90 to-indigo-950/70 p-4 border border-white/10 shadow-lg flex items-center justify-between">
-          <div class="max-w-[260px] sm:max-w-md">
-            <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">PromptWave Music</span>
+        <!-- Greeting & Demo Premium Banner -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900/90 to-indigo-950/80 p-4 border border-white/15 shadow-xl flex items-center justify-between">
+          <div class="max-w-[240px] sm:max-w-md z-10">
+            <span class="text-[9px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30">PromptWave Live Hub</span>
             <h1 class="text-xl font-black mt-1 text-white" id="greeting-title">Good Evening</h1>
-            <p class="text-[11px] text-gray-300 mt-0.5 leading-snug">Upload your songs to auto-generate genre folders. Listen and save to your account for offline streaming!</p>
+            <p class="text-[11px] text-gray-300 mt-0.5 leading-snug">Every uploaded AI song automatically spawns its dedicated Genre Folder below.</p>
           </div>
-          <button onclick="openPremiumModal()" class="flex-shrink-0 bg-gradient-to-tr from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black text-[10px] font-black px-3 py-2 rounded-xl shadow-lg flex flex-col items-center cursor-pointer transition">
+          <button onclick="openPremiumModal()" class="z-10 flex-shrink-0 bg-gradient-to-tr from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-black text-[10px] font-black px-3 py-2 rounded-xl shadow-lg flex flex-col items-center cursor-pointer transition">
             <span class="flex items-center gap-1"><i class="fa-solid fa-crown text-xs"></i> PREMIUM</span>
             <span class="text-[9px] font-bold">₱99 / week</span>
           </button>
+          <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
         </div>
 
-        <!-- Quick AI Smart Mixes -->
+        <!-- Quick AI Mix Cards -->
         <div>
-          <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-2">Featured AI Mixes</h2>
+          <h2 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-2">Curated AI Stations</h2>
           <div class="grid grid-cols-2 gap-2">
             <div class="card-glass p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer group">
-              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xs font-black"><i class="fa-solid fa-bolt"></i></div>
-              <span class="text-xs font-bold text-white group-hover:text-emerald-400 truncate">Viral AI Hits</span>
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xs font-black"><i class="fa-solid fa-bolt"></i></div>
+              <span class="text-xs font-bold text-white group-hover:text-emerald-400 truncate">Suno v3.5 Radio</span>
             </div>
             <div class="card-glass p-2.5 rounded-xl flex items-center gap-2.5 cursor-pointer group">
-              <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-xs font-black"><i class="fa-solid fa-headphones"></i></div>
-              <span class="text-xs font-bold text-white group-hover:text-indigo-400 truncate">Lo-Fi Chill Stems</span>
+              <div class="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xs font-black"><i class="fa-solid fa-headphones"></i></div>
+              <span class="text-xs font-bold text-white group-hover:text-indigo-400 truncate">Udio Lo-Fi Stems</span>
             </div>
           </div>
         </div>
 
-        <!-- DYNAMIC AUTO-GENRE FOLDERS -->
-        <div id="genre-folders-container" class="flex flex-col gap-6 pb-6">
+        <!-- DYNAMIC AUTO-GENRE FOLDERS (Rendered on Upload) -->
+        <div id="genre-folders-container" class="flex flex-col gap-5 pb-6">
           <!-- Folders render here -->
         </div>
 
@@ -201,14 +271,12 @@
             <h1 class="text-lg font-black text-white">Your Library</h1>
             <p class="text-[11px] text-gray-400">Account storage & downloaded offline tracks.</p>
           </div>
-          <!-- Offline Only Filter Badge -->
-          <button id="filter-offline-btn" onclick="toggleLibraryOfflineFilter()" class="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer">
+          <button id="filter-offline-btn" onclick="toggleLibraryOfflineFilter()" class="text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer transition">
             <i class="fa-solid fa-circle-down text-emerald-400"></i> Downloaded
           </button>
         </div>
 
-        <!-- Library Container -->
-        <div id="library-songs-container" class="flex flex-col gap-2.5 pb-6">
+        <div id="library-songs-container" class="flex flex-col gap-2 pb-6">
           <!-- Populated from uploads and account downloads -->
         </div>
       </div>
@@ -217,10 +285,10 @@
       <div id="view-settings" class="view-panel hidden flex-col gap-4 pb-6">
         <div class="pb-2 border-b border-white/10">
           <h1 class="text-lg font-black text-white">Settings</h1>
-          <p class="text-[11px] text-gray-400">Account status, offline caching, and audio quality.</p>
+          <p class="text-[11px] text-gray-400">Account plan, in-app offline cache, and audio quality.</p>
         </div>
 
-        <!-- Spotify-style Offline Cache Toggle -->
+        <!-- Offline In-App Mode Toggle -->
         <div class="card-glass p-4 rounded-xl flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <div>
@@ -228,7 +296,7 @@
                 <h3 class="text-xs font-bold text-white">Offline Mode</h3>
                 <span class="text-[8px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1 py-0.2 rounded font-black uppercase">In-App Only</span>
               </div>
-              <p class="text-[10px] text-gray-400">Only play songs downloaded to your account (no internet).</p>
+              <p class="text-[10px] text-gray-400">Only play tracks saved to your account (no internet).</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" id="offline-mode-toggle" class="sr-only peer" onchange="handleOfflineToggle(this)">
@@ -237,7 +305,7 @@
           </div>
 
           <p class="text-[9px] text-gray-500 italic border-t border-white/5 pt-2">
-            <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Anti-Piracy Protection: Music is encrypted inside your account cache and cannot be copied to device files.
+            <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Protected In-App Cache: Music is securely kept within PromptWave and cannot be copied to device files.
           </p>
         </div>
 
@@ -245,23 +313,30 @@
         <div class="card-glass p-4 rounded-xl flex flex-col gap-2">
           <div class="flex justify-between items-center">
             <div>
-              <span class="text-[10px] text-gray-400 uppercase font-black">Current Plan</span>
+              <span class="text-[10px] text-gray-400 uppercase font-black">Account Plan</span>
               <h4 id="settings-current-plan" class="text-sm font-black text-white">Free Community Plan</h4>
             </div>
             <button onclick="openPremiumModal()" class="btn-3d-green text-[10px] font-black px-3 py-1.5 rounded-lg text-black">
               View Plans
             </button>
           </div>
-          <p class="text-[10px] text-gray-400" id="settings-plan-desc">Upgrade to download and stream unlimited AI songs offline in your account.</p>
+          <p class="text-[10px] text-gray-400" id="settings-plan-desc">Upgrade to stream unlimited AI tracks and download offline directly to your account.</p>
         </div>
 
-        <!-- Audio Preferences -->
+        <!-- Visual / Audio Settings -->
         <div class="card-glass p-4 rounded-xl flex flex-col gap-3">
-          <h3 class="text-xs font-bold text-white">Playback Settings</h3>
+          <h3 class="text-xs font-bold text-white">Experience Settings</h3>
           <div class="flex items-center justify-between text-xs text-gray-300">
             <div>
+              <p class="font-bold text-white text-[11px]">Neural Particle Mesh</p>
+              <p class="text-gray-400 text-[10px]">Interactive background AI connections.</p>
+            </div>
+            <input type="checkbox" id="toggle-canvas-particles" checked onchange="toggleParticles(this)" class="w-4 h-4 accent-emerald-500 cursor-pointer">
+          </div>
+          <div class="flex items-center justify-between text-xs text-gray-300 pt-2 border-t border-white/5">
+            <div>
               <p class="font-bold text-white text-[11px]">Normalize Volume</p>
-              <p class="text-gray-400 text-[10px]">Same loudness across all AI tracks.</p>
+              <p class="text-gray-400 text-[10px]">Uniform volume level across all AI models.</p>
             </div>
             <input type="checkbox" checked class="w-4 h-4 accent-emerald-500 cursor-pointer">
           </div>
@@ -274,17 +349,24 @@
     <div class="flex-shrink-0 z-40">
       
       <!-- MINI AUDIO PLAYER (Docked right above bottom navigation) -->
-      <div class="bg-[#0e111d]/95 border-t border-white/10 px-3 py-2 flex items-center justify-between backdrop-blur-xl">
+      <div class="bg-[#0b0e1a]/95 border-t border-white/10 px-3 py-2 flex items-center justify-between backdrop-blur-2xl shadow-2xl">
         
-        <!-- Track Thumbnail & Info -->
+        <!-- Track Thumbnail & Info (With Vinyl Spin Effect) -->
         <div class="flex items-center gap-2.5 w-3/5 truncate">
-          <div id="player-cover-box" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <div id="player-cover-box" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg">
             <i class="fa-solid fa-music text-gray-600 text-sm" id="placeholder-music-icon"></i>
-            <img id="player-cover" src="" class="w-full h-full object-cover hidden">
+            <img id="player-cover" src="" class="w-full h-full object-cover hidden rounded-full">
           </div>
           <div class="flex flex-col truncate">
-            <div class="flex items-center gap-1 truncate">
+            <div class="flex items-center gap-1.5 truncate">
               <span id="player-title" class="text-white text-xs font-bold truncate">Ready to stream</span>
+              <!-- Dancing Live Equalizer -->
+              <div id="player-equalizer" class="hidden items-center gap-0.5 h-3 flex-shrink-0">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+              </div>
               <span id="player-offline-badge" class="hidden text-emerald-400 text-[9px]"><i class="fa-solid fa-circle-down"></i></span>
             </div>
             <span id="player-artist" class="text-emerald-400 text-[10px] font-semibold truncate">Upload or pick a song</span>
@@ -296,14 +378,14 @@
           <button id="prev-btn" class="text-gray-400 hover:text-white transition cursor-pointer text-xs">
             <i class="fa-solid fa-backward-step"></i>
           </button>
-          <button id="play-btn" class="w-8 h-8 rounded-full btn-3d-green text-black flex items-center justify-center cursor-pointer shadow">
+          <button id="play-btn" class="w-8 h-8 rounded-full btn-3d-green text-black flex items-center justify-center cursor-pointer shadow-lg shadow-emerald-500/20">
             <i id="play-icon" class="fa-solid fa-play ml-0.5 text-xs"></i>
           </button>
           <button id="next-btn" class="text-gray-400 hover:text-white transition cursor-pointer text-xs">
             <i class="fa-solid fa-forward-step"></i>
           </button>
           
-          <!-- SPOTIFY IN-APP ACCOUNT DOWNLOAD BUTTON -->
+          <!-- In-App Download Button -->
           <button id="player-download-btn" onclick="toggleAccountDownloadCurrent()" title="Download to Account (Offline)" class="text-gray-400 hover:text-emerald-400 text-xs ml-1 cursor-pointer">
             <i id="player-download-icon" class="fa-solid fa-circle-down"></i>
           </button>
@@ -311,7 +393,7 @@
       </div>
 
       <!-- PORTRAIT BOTTOM NAVIGATION BAR (Home - Library - Settings) -->
-      <nav class="h-14 bg-[#080911] border-t border-white/5 px-6 flex items-center justify-around">
+      <nav class="h-14 bg-[#07080f] border-t border-white/5 px-6 flex items-center justify-around">
         
         <button id="nav-home" onclick="switchView('home')" class="nav-item flex flex-col items-center gap-1 text-emerald-400 transition cursor-pointer">
           <i class="fa-solid fa-house text-sm"></i>
@@ -349,19 +431,19 @@
       <form id="upload-form" class="flex flex-col gap-2.5 text-xs">
         <div>
           <label class="block text-gray-400 mb-1 font-bold text-[10px]">Track Title</label>
-          <input type="text" id="modal-title" required placeholder="e.g. Neon Horizon" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
+          <input type="text" id="modal-title" required placeholder="e.g. Cyber City Reverie" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-gray-400 mb-1 font-bold text-[10px]">AI Artist</label>
-            <input type="text" id="modal-artist" required placeholder="e.g. PromptMaker" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
+            <input type="text" id="modal-artist" required placeholder="e.g. PromptWiz" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-white focus:outline-none focus:border-emerald-500 text-xs">
           </div>
 
           <div>
             <label class="block text-gray-400 mb-1 font-bold text-[10px]">Genre (Auto-Folder)</label>
             <select id="modal-genre" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 text-xs cursor-pointer">
-              <option value="" disabled selected>-- Genre --</option>
+              <option value="" disabled selected>-- Choose Genre --</option>
               <option value="Pop Rock">Pop Rock</option>
               <option value="Rock">Rock</option>
               <option value="Ballad">Ballad</option>
@@ -425,7 +507,7 @@
 
       <div class="text-center flex flex-col gap-1">
         <h3 class="text-base font-black text-white">Stream Unlimited & Download</h3>
-        <p class="text-[11px] text-gray-400 leading-tight">Save songs to your account for offline listening anywhere without using mobile data.</p>
+        <p class="text-[11px] text-gray-400 leading-tight">Save tracks to your account for offline listening without internet data.</p>
       </div>
 
       <!-- Plan Options -->
@@ -494,7 +576,7 @@
   <script>
     // App State
     let songs = [];
-    let downloadedSongIds = new Set(); // Stores songs downloaded inside user's account
+    let downloadedSongIds = new Set();
     let currentSongIndex = -1;
     let isPlaying = false;
     let currentUser = null;
@@ -518,6 +600,7 @@
     const placeholderIcon = document.getElementById("placeholder-music-icon");
     const playerOfflineBadge = document.getElementById("player-offline-badge");
     const playerDownloadIcon = document.getElementById("player-download-icon");
+    const playerEqualizer = document.getElementById("player-equalizer");
 
     // Dynamic Time Greeting
     function updateGreeting() {
@@ -598,15 +681,17 @@
 
         songsInGenre.forEach(song => {
           const isDownloaded = downloadedSongIds.has(song.id);
+          const isThisPlaying = (currentSongIndex !== -1 && songs[currentSongIndex].id === song.id && isPlaying);
+
           const card = document.createElement("div");
-          card.className = "card-glass flex items-center justify-between p-2.5 rounded-xl cursor-pointer group";
+          card.className = `card-glass flex items-center justify-between p-2.5 rounded-xl cursor-pointer group ${isThisPlaying ? 'border-emerald-500/60 shadow-lg shadow-emerald-500/10' : ''}`;
 
           card.innerHTML = `
             <div class="flex items-center gap-2.5 truncate">
-              <img src="${song.cover}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shadow flex-shrink-0">
+              <img src="${song.cover}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shadow flex-shrink-0 ${isThisPlaying ? 'vinyl-spinning rounded-full' : ''}">
               <div class="truncate">
                 <div class="flex items-center gap-1.5 truncate">
-                  <p class="font-bold text-white text-xs truncate group-hover:text-emerald-300 transition">${song.title}</p>
+                  <p class="font-bold text-white text-xs truncate ${isThisPlaying ? 'text-emerald-300' : 'group-hover:text-emerald-300'} transition">${song.title}</p>
                   ${isDownloaded ? '<i class="fa-solid fa-circle-down text-emerald-400 text-[10px]" title="Downloaded in Account"></i>' : ''}
                 </div>
                 <div class="flex items-center gap-1.5 text-[10px] text-gray-400">
@@ -621,15 +706,19 @@
               <button onclick="event.stopPropagation(); toggleSongDownload(${song.id})" class="w-7 h-7 rounded-lg text-gray-400 hover:text-emerald-400 flex items-center justify-center transition">
                 <i class="fa-solid fa-circle-down ${isDownloaded ? 'text-emerald-400' : 'text-gray-500'}"></i>
               </button>
-              <button class="w-7 h-7 rounded-lg bg-white/5 group-hover:bg-emerald-500 group-hover:text-black flex items-center justify-center transition shadow">
-                <i class="fa-solid fa-play text-[10px] ml-0.5"></i>
+              <button class="w-7 h-7 rounded-lg ${isThisPlaying ? 'bg-emerald-500 text-black' : 'bg-white/5 group-hover:bg-emerald-500 group-hover:text-black'} flex items-center justify-center transition shadow">
+                <i class="fa-solid ${isThisPlaying ? 'fa-pause' : 'fa-play'} text-[10px] ml-0.5"></i>
               </button>
             </div>
           `;
 
           card.addEventListener("click", () => {
             const globalIndex = songs.findIndex(s => s.id === song.id);
-            playSong(globalIndex);
+            if (currentSongIndex === globalIndex && isPlaying) {
+              playBtn.click();
+            } else {
+              playSong(globalIndex);
+            }
           });
 
           tracksContainer.appendChild(card);
@@ -639,7 +728,7 @@
       });
     }
 
-    // Render Library View
+    // Render Library
     function renderLibrary() {
       const container = document.getElementById("library-songs-container");
       container.innerHTML = "";
@@ -659,7 +748,7 @@
         return;
       }
 
-      listToRender.forEach((song, idx) => {
+      listToRender.forEach((song) => {
         const isDownloaded = downloadedSongIds.has(song.id);
         const item = document.createElement("div");
         item.className = "card-glass p-2.5 rounded-xl flex items-center justify-between cursor-pointer";
@@ -688,20 +777,19 @@
       if (onlyShowDownloadedInLibrary) {
         btn.className = "text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500 bg-emerald-500/20 text-emerald-300 flex items-center gap-1 cursor-pointer";
       } else {
-        btn.className = "text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer";
+        btn.className = "text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-gray-300 flex items-center gap-1 hover:border-emerald-500 cursor-pointer transition";
       }
       renderLibrary();
     }
 
-    // Play Track
+    // Play Song
     function playSong(index) {
       if (index < 0 || index >= songs.length) return;
       currentSongIndex = index;
       const song = songs[index];
 
-      // Check if Offline Mode is on and track is NOT downloaded
       if (isOfflineModeActive && !downloadedSongIds.has(song.id)) {
-        alert("Offline Mode is active! You can only play songs saved to your account. Disable offline mode or download this track first.");
+        alert("Offline Mode Active! You can only play tracks downloaded to your account.");
         return;
       }
 
@@ -714,6 +802,8 @@
 
       placeholderIcon.classList.add("hidden");
       playerCover.classList.remove("hidden");
+      playerCover.classList.add("vinyl-spinning");
+      playerEqualizer.classList.replace("hidden", "flex");
 
       updatePlayerDownloadStatus();
 
@@ -723,7 +813,6 @@
       renderGenreFolders();
     }
 
-    // Update Player In-App Download Icon
     function updatePlayerDownloadStatus() {
       if (currentSongIndex === -1) return;
       const song = songs[currentSongIndex];
@@ -738,7 +827,6 @@
       }
     }
 
-    // Toggle In-App Account Download for specific track
     function toggleSongDownload(songId) {
       if (!isPremium) {
         openPremiumModal();
@@ -750,7 +838,7 @@
         alert("Removed from Account Offline Cache.");
       } else {
         downloadedSongIds.add(songId);
-        alert("Downloaded to Account! You can now listen offline inside PromptWave without internet.");
+        alert("Downloaded to Account! You can now listen offline inside PromptWave.");
       }
 
       renderGenreFolders();
@@ -765,7 +853,6 @@
       toggleSongDownload(songs[currentSongIndex].id);
     }
 
-    // Settings Offline Mode Toggle
     function handleOfflineToggle(cb) {
       if (!isPremium) {
         cb.checked = false;
@@ -774,11 +861,7 @@
       }
 
       isOfflineModeActive = cb.checked;
-      if (isOfflineModeActive) {
-        alert("Offline Mode Active: You will only stream songs downloaded inside your account.");
-      } else {
-        alert("Offline Mode Disabled: Online streaming restored.");
-      }
+      alert(isOfflineModeActive ? "Offline Mode: Active. Only account-cached songs will play." : "Offline Mode: Disabled.");
     }
 
     // Play / Pause Toggle
@@ -792,6 +875,8 @@
         audio.pause();
         isPlaying = false;
         playIcon.className = "fa-solid fa-play ml-0.5 text-xs";
+        playerCover.classList.remove("vinyl-spinning");
+        playerEqualizer.classList.replace("flex", "hidden");
       } else {
         if (!audio.src || currentSongIndex === -1) {
           playSong(0);
@@ -799,8 +884,11 @@
           audio.play();
           isPlaying = true;
           playIcon.className = "fa-solid fa-pause text-xs";
+          playerCover.classList.add("vinyl-spinning");
+          playerEqualizer.classList.replace("hidden", "flex");
         }
       }
+      renderGenreFolders();
     });
 
     nextBtn.addEventListener("click", () => {
@@ -893,7 +981,7 @@
       closeLoginModal();
     }
 
-    // Demo Premium Modal (₱99/week & ₱199/month)
+    // Demo Premium Modal
     const premiumModal = document.getElementById("premium-modal");
     function openPremiumModal() { premiumModal.classList.replace("hidden", "flex"); }
     function closePremiumModal() { premiumModal.classList.replace("flex", "hidden"); }
@@ -902,23 +990,111 @@
       isPremium = true;
       currentPlanName = planName;
 
-      // Update Header Badge
       const headerBadge = document.getElementById("header-plan-badge");
       headerBadge.innerText = planName === 'Weekly Pass' ? 'VIP WEEKLY' : 'VIP MONTHLY';
-      headerBadge.className = "text-[8px] bg-gradient-to-r from-amber-500 to-amber-400 text-black font-extrabold px-1.5 py-0.2 rounded shadow cursor-pointer";
+      headerBadge.className = "text-[8px] bg-gradient-to-r from-amber-400 to-amber-500 text-black font-extrabold px-1.5 py-0.2 rounded shadow cursor-pointer";
 
-      // Update Settings Display
       document.getElementById("settings-current-plan").innerText = `${planName} (${priceTag}) - Active`;
-      document.getElementById("settings-plan-desc").innerText = "You have unlimited streaming and account-only offline downloads enabled.";
+      document.getElementById("settings-plan-desc").innerText = "Unlimited streaming & account-only offline downloads unlocked.";
 
       closePremiumModal();
-      alert(`🎉 Demo Subscription Activated: ${planName} (${priceTag})! Account-only offline downloads are now unlocked.`);
+      alert(`🎉 VIP Activated: ${planName} (${priceTag})! Account-only offline downloads are now ready.`);
+    }
+
+    // ================= JAW-DROPPING INTERACTIVE NEURAL CANVAS =================
+    const canvas = document.getElementById("bg-canvas");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let animationFrameId;
+    let particlesEnabled = true;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.45;
+        this.vy = (Math.random() - 0.5) * 0.45;
+        this.radius = Math.random() * 1.8 + 0.8;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(16, 185, 129, 0.45)";
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(Math.floor((canvas.width * canvas.height) / 18000), 55);
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      if (!particlesEnabled) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 115) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(99, 102, 241, ${0.15 * (1 - dist / 115)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      animationFrameId = requestAnimationFrame(animateParticles);
+    }
+
+    // Interactive Touch/Mouse connection
+    window.addEventListener("pointermove", (e) => {
+      if (particles.length > 0 && Math.random() > 0.4) {
+        particles[0].x = e.clientX;
+        particles[0].y = e.clientY;
+      }
+    });
+
+    function toggleParticles(cb) {
+      particlesEnabled = cb.checked;
+      if (particlesEnabled) {
+        animateParticles();
+      } else {
+        cancelAnimationFrame(animationFrameId);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     }
 
     // Startup
     window.addEventListener("DOMContentLoaded", () => {
       updateGreeting();
       renderGenreFolders();
+      initParticles();
+      animateParticles();
       audio.volume = 0.8;
     });
   </script>
