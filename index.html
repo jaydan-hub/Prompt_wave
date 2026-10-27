@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptWave | AI Creator-Driven Music Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* I-lock ang buong screen para maiwasan ang upper at lower scrolling */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background-color: #07090e;
+    }
+
+    /* Malaking Blurry Ambient Background */
+    .ambient-glow-wrapper {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .blur-orb-emerald {
+      position: absolute;
+      top: -15%;
+      left: 10%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.22), transparent 70%);
+      filter: blur(100px);
+    }
+    .blur-orb-indigo {
+      position: absolute;
+      bottom: -10%;
+      right: 5%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent 70%);
+      filter: blur(120px);
+    }
+    .blur-orb-purple {
+      position: absolute;
+      top: 35%;
+      left: 40%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(217, 70, 239, 0.12), transparent 70%);
+      filter: blur(110px);
+    }
+
+    /* 3D Glass Cards */
+    .card-glass {
+      background: rgba(16, 20, 32, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-glass:hover {
+      background: rgba(22, 28, 48, 0.85);
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.15);
+    }
+
+    /* 3D Tactile Buttons */
+    .btn-3d-green {
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.35);
+      transition: all 0.12s ease;
+    }
+    .btn-3d-green:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #047857, 0 12px 22px rgba(16, 185, 129, 0.45);
+    }
+    .btn-3d-green:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #047857, 0 4px 8px rgba(16, 185, 129, 0.2);
+    }
+
+    /* Custom Slim Scrollbar para lang sa Highlights area */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.5);
+    }
+
+    input[type="range"] {
+      accent-color: #10b981;
+    }
+  </style>
+</head>
+<body class="text-gray-100 flex flex-col font-sans select-none antialiased relative">
+
+  <!-- MALAKING BLURRY BACKGROUND -->
+  <div class="ambient-glow-wrapper">
+    <div class="blur-orb-emerald"></div>
+    <div class="blur-orb-indigo"></div>
+    <div class="blur-orb-purple"></div>
+  </div>
+
+  <!-- ================= 1. NAKA-LOCK NA UPPER HEADER (HINDI NAG-IISCROLL) ================= -->
+  <header class="h-16 flex-shrink-0 bg-[#0c0e18]/90 backdrop-blur-md border-b border-white/10 px-6 flex items-center justify-between z-40 relative">
+    
+    <!-- Logo & Brand -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+        <i class="fa-solid fa-wave-square text-lg text-white"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-indigo-400">PROMPT<span class="text-white">WAVE</span></span>
+          <span class="text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">AI Open Studio</span>
+        </div>
+        <p class="text-[10px] text-gray-400 hidden sm:block">Upload • Auto-Genre Sort • Earn</p>
+      </div>
+    </div>
+
+    <!-- Search Engine -->
+    <div class="hidden md:flex items-center bg-[#131625] border border-white/10 rounded-full px-4 py-1.5 w-80 focus-within:border-emerald-500/80 transition">
+      <i class="fa-solid fa-magnifying-glass text-gray-400 mr-2.5 text-xs"></i>
+      <input type="text" id="search-input" placeholder="Search song title, artist, or genre..." class="bg-transparent border-none text-xs text-white focus:outline-none w-full placeholder-gray-500">
+    </div>
+
+    <!-- Upload Action Button -->
+    <div class="flex items-center gap-3">
+      <button id="open-upload-modal" class="btn-3d-green text-xs font-black px-4 py-2 rounded-xl flex items-center gap-2 text-black cursor-pointer">
+        <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+        <span>UPLOAD AI SONG</span>
+      </button>
+
+      <div class="w-9 h-9 rounded-xl bg-[#171b2d] border border-white/15 flex items-center justify-center text-emerald-400 shadow cursor-pointer">
+        <i class="fa-regular fa-user text-sm"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN MIDDLE CONTAINER ================= -->
+  <div class="flex flex-1 overflow-hidden z-10 relative">
+
+    <!-- ================= 2. NAKA-LOCK NA LEFT MENUS (HINDI NAG-IISCROLL) ================= -->
+    <aside class="w-64 bg-[#0a0d16]/75 backdrop-blur-md border-r border-white/5 p-4 flex flex-col justify-between hidden lg:flex flex-shrink-0">
+      
+      <div class="flex flex-col gap-6">
+        <!-- Main Navigation Links -->
+        <div class="flex flex-col gap-1.5">
+          <span class="text-[10px] font-black uppercase tracking-wider text-gray-500 px-3">Navigation</span>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-emerald-400 bg-white/5 font-bold text-xs text-left w-full">
+            <i class="fa-solid fa-house text-sm w-4"></i> Home Showcase
+          </button>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 font-semibold text-xs text-left w-full transition">
+            <i class="fa-solid fa-chart-simple text-amber-400 text-sm w-4"></i> Top Streamed
+          </button>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 font-semibold text-xs text-left w-full transition">
+            <i class="fa-solid fa-users text-indigo-400 text-sm w-4"></i> AI Artists
+          </button>
+        </div>
+
+        <!-- Creator Monetization Info -->
+        <div class="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-950/40 via-[#111627] to-indigo-950/40 border border-emerald-500/20 shadow-lg">
+          <div class="flex items-center justify-between text-xs font-black text-emerald-400 mb-1">
+            <span><i class="fa-solid fa-coins text-amber-400 mr-1"></i> Creator Pay</span>
+            <span class="text-[9px] bg-emerald-500/20 px-1.5 py-0.5 rounded border border-emerald-500/40">Active</span>
+          </div>
+          <p class="text-[10px] text-gray-400">Automatic revenue computation: ₱0.15 bawat stream.</p>
+          <div class="mt-2 pt-2 border-t border-white/5 flex justify-between items-center text-xs">
+            <span class="text-[10px] text-gray-500">Live Pool:</span>
+            <span class="font-extrabold text-emerald-400" id="total-community-earnings">₱0.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Platform Counters -->
+      <div class="text-[10px] text-gray-500 flex flex-col gap-1 border-t border-white/5 pt-3">
+        <div class="flex justify-between"><span>Active Folders:</span> <span class="text-white font-bold" id="active-folders-count">0 Folders</span></div>
+        <div class="flex justify-between"><span>Uploaded Tracks:</span> <span class="text-emerald-400 font-bold" id="total-tracks-count">0 Songs</span></div>
+      </div>
+    </aside>
+
+    <!-- ================= 3. ANG TANGING SCROLLABLE NA PARTE (DYNAMIC FOLDERS FEED) ================= -->
+    <main class="flex-1 overflow-y-auto custom-scroll p-6 flex flex-col gap-6" id="main-scroll-feed">
+
+      <!-- Compact Greeting / Instructions Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900/90 to-indigo-950/70 p-6 border border-white/10 shadow-2xl flex items-center justify-between min-h-[130px]">
+        <div class="z-10 max-w-xl">
+          <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded">PromptWave Creator Hub</span>
+          <h1 class="text-2xl font-black mt-1 text-white">Smart Auto-Folder AI Library</h1>
+          <p class="text-xs text-gray-300 mt-1">Lahat ng i-a-upload mong kanta ay awtomatikong gagawan ng sariling **Genre Folder** dito sa home.</p>
+        </div>
+        <div class="z-10 hidden sm:block">
+          <button onclick="document.getElementById('open-upload-modal').click()" class="btn-3d-green text-xs font-black px-5 py-3 rounded-xl text-black flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-plus"></i> UPLOAD SONG
+          </button>
+        </div>
+        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      </div>
+
+      <!-- DYNAMIC GENRE FOLDERS CONTAINER (Dito lalabas ang mga folders) -->
+      <div id="genre-folders-container" class="flex flex-col gap-8 pb-10">
+        <!-- Dito awtomatikong mag-ge-generate ang mga Folders -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ================= 4. NAKA-LOCK NA LOWER MUSIC PLAYER BAR (HINDI NAG-IISCROLL) ================= -->
+  <footer class="h-20 flex-shrink-0 bg-[#080a12]/95 border-t border-white/10 px-5 flex items-center justify-between z-40 backdrop-blur-xl relative">
+    
+    <!-- Left: Now Playing Info -->
+    <div class="flex items-center gap-3 w-1/4 min-w-[200px]">
+      <div id="player-cover-box" class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden shadow">
+        <i class="fa-solid fa-music text-gray-600 text-lg" id="placeholder-music-icon"></i>
+        <img id="player-cover" src="" class="w-full h-full object-cover hidden">
+      </div>
+      <div class="flex flex-col truncate">
+        <span id="player-title" class="text-white text-xs font-bold truncate">Standby</span>
+        <div class="flex items-center gap-1.5 text-[10px] text-gray-400 truncate">
+          <span id="player-artist" class="text-emerald-400 font-semibold truncate">Upload a track to play</span>
+          <span id="genre-dot" class="hidden">•</span>
+          <span id="player-genre" class="bg-white/10 px-1 rounded text-[9px] text-gray-300 hidden">Genre</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Playback Controls & Timeline -->
+    <div class="flex flex-col items-center gap-1.5 w-2/4 max-w-lg">
+      <div class="flex items-center gap-5">
+        <button id="prev-btn" class="text-gray-400 hover:text-white transition cursor-pointer">
+          <i class="fa-solid fa-backward-step text-base"></i>
+        </button>
+        <button id="play-btn" class="w-10 h-10 rounded-full btn-3d-green text-black flex items-center justify-center cursor-pointer shadow-lg shadow-emerald-500/20">
+          <i id="play-icon" class="fa-solid fa-play ml-0.5 text-sm"></i>
+        </button>
+        <button id="next-btn" class="text-gray-400 hover:text-white transition cursor-pointer">
+          <i class="fa-solid fa-forward-step text-base"></i>
+        </button>
+      </div>
+
+      <div class="w-full flex items-center gap-2 text-[10px] text-gray-400 font-mono">
+        <span id="current-time">0:00</span>
+        <input type="range" id="seek-bar" value="0" min="0" max="100" class="w-full h-1 bg-white/10 rounded-lg cursor-pointer">
+        <span id="total-duration">0:00</span>
+      </div>
+    </div>
+
+    <!-- Right: Volume & Realtime Revenue Badge -->
+    <div class="flex items-center justify-end gap-3 w-1/4 min-w-[150px]">
+      <div class="hidden lg:flex flex-col text-right pr-3 border-r border-white/10">
+        <span class="text-[9px] text-gray-400 uppercase font-black">Track Earnings</span>
+        <span id="player-revenue" class="text-xs font-black text-emerald-400">₱0.00</span>
+      </div>
+      <button id="mute-btn" class="text-gray-400 hover:text-white cursor-pointer">
+        <i id="volume-icon" class="fa-solid fa-volume-high text-xs"></i>
+      </button>
+      <input type="range" id="volume-bar" value="80" min="0" max="100" class="w-20 h-1 bg-white/10 rounded-lg cursor-pointer">
+    </div>
+  </footer>
+
+  <!-- ================= UPLOAD MODAL WITH COMPREHENSIVE GENRES ================= -->
+  <div id="upload-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="card-glass w-full max-w-lg rounded-2xl p-6 flex flex-col gap-4 border border-white/20">
+      
+      <div class="flex justify-between items-center pb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-folder-plus text-emerald-400 text-lg"></i>
+          <h3 class="text-sm font-black text-white">Upload AI Music to Its Genre Folder</h3>
+        </div>
+        <button id="close-upload-modal" class="text-gray-400 hover:text-white text-xl cursor-pointer">&times;</button>
+      </div>
+
+      <form id="upload-form" class="flex flex-col gap-3 text-xs">
+        <div>
+          <label class="block text-gray-400 mb-1 font-bold">Song Title</label>
+          <input type="text" id="modal-title" required placeholder="Halimbawa: Pag-ibig sa Dilim" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-gray-400 mb-1 font-bold">AI Artist / Creator Name</label>
+            <input type="text" id="modal-artist" required placeholder="Halimbawa: PromptMaker PH" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <!-- COMPREHENSIVE GENRE SELECTION -->
+          <div>
+            <label class="block text-gray-400 mb-1 font-bold">Pumili ng Genre (Auto-Folder)</label>
+            <select id="modal-genre" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 cursor-pointer">
+              <option value="" disabled selected>-- Pumili ng Genre --</option>
+              <option value="Pop Rock">Pop Rock</option>
+              <option value="Rock">Rock</option>
+              <option value="Ballad">Ballad</option>
+              <option value="Reggae">Reggae</option>
+              <option value="Metal">Heavy Metal</option>
+              <option value="Hip-Hop & Rap">Hip-Hop & Rap</option>
+              <option value="Pinoy OPM AI">🇵🇭 Pinoy OPM AI</option>
+              <option value="Pop">Pop</option>
+              <option value="R&B / Soul">R&B / Soul</option>
+              <option value="Lo-Fi & Chillhop">Lo-Fi & Chillhop</option>
+              <option value="EDM / Electronic">EDM / Electronic</option>
+              <option value="Cyberpunk / Synthwave">Cyberpunk / Synthwave</option>
+              <option value="Acoustic & Folk">Acoustic & Folk</option>
+              <option value="Country">Country</option>
+              <option value="Jazz & Blues">Jazz & Blues</option>
+              <option value="Punk">Punk</option>
+              <option value="Disco & Funk">Disco & Funk</option>
+              <option value="Classical & Orchestral">Classical & Orchestral</option>
+              <option value="Gospel & Spiritual">Gospel & Spiritual</option>
+              <option value="Anime / J-Pop / K-Pop">Anime / J-Pop / K-Pop</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-gray-400 mb-1 font-bold">AI Prompt / Model Used</label>
+          <input type="text" id="modal-prompt" placeholder="Halimbawa: Suno v3.5, 90s Manila alternative rock, distorted guitars" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2.5 text-white focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-gray-400 mb-1 font-bold">MP3 Audio File</label>
+            <input type="file" id="modal-audio" accept="audio/*" required class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-gray-400 text-[11px] file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-emerald-500/20 file:text-emerald-400 cursor-pointer">
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1 font-bold">Cover Image (Optional)</label>
+            <input type="file" id="modal-cover" accept="image/*" class="w-full bg-[#111422] border border-white/10 rounded-xl p-2 text-gray-400 text-[11px] file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-indigo-500/20 file:text-indigo-400 cursor-pointer">
+          </div>
+        </div>
+
+        <div class="pt-3 flex justify-end gap-2 border-t border-white/10">
+          <button type="button" id="cancel-upload" class="px-4 py-2 rounded-xl text-gray-400 hover:text-white font-bold cursor-pointer">Cancel</button>
+          <button type="submit" class="btn-3d-green px-5 py-2 rounded-xl text-black font-black cursor-pointer">Auto-Create Genre Folder & Publish</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <audio id="audio-engine" preload="metadata"></audio>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // 100% BLANKO NA SA SIMULA (Walang hardcoded sample tracks)
+    let songs = [];
+
+    let currentSongIndex = -1;
+    let isPlaying = false;
+    const STREAM_RATE = 0.15; // ₱0.15 bawat play
+
+    // DOM Elements
+    const audio = document.getElementById("audio-engine");
+    const playBtn = document.getElementById("play-btn");
+    const playIcon = document.getElementById("play-icon");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const seekBar = document.getElementById("seek-bar");
+    const currentTimeEl = document.getElementById("current-time");
+    const totalDurationEl = document.getElementById("total-duration");
+    const volumeBar = document.getElementById("volume-bar");
+    const volumeIcon = document.getElementById("volume-icon");
+    const foldersContainer = document.getElementById("genre-folders-container");
+
+    // Stats
+    const totalTracksCountEl = document.getElementById("total-tracks-count");
+    const activeFoldersCountEl = document.getElementById("active-folders-count");
+    const totalCommunityEarningsEl = document.getElementById("total-community-earnings");
+
+    // Player Elements
+    const playerTitle = document.getElementById("player-title");
+    const playerArtist = document.getElementById("player-artist");
+    const playerGenre = document.getElementById("player-genre");
+    const playerCover = document.getElementById("player-cover");
+    const playerRevenue = document.getElementById("player-revenue");
+    const placeholderIcon = document.getElementById("placeholder-music-icon");
+    const genreDot = document.getElementById("genre-dot");
+
+    // Modal Elements
+    const uploadModal = document.getElementById("upload-modal");
+    const openUploadBtn = document.getElementById("open-upload-modal");
+    const closeUploadBtn = document.getElementById("close-upload-modal");
+    const cancelUploadBtn = document.getElementById("cancel-upload");
+    const uploadForm = document.getElementById("upload-form");
+
+    // RENDER HOMEPAGE DYNAMIC GENRE FOLDERS
+    function renderGenreFolders(list = songs) {
+      foldersContainer.innerHTML = "";
+      totalTracksCountEl.innerText = `${songs.length} Songs`;
+
+      // Update total community earnings
+      const totalEarnings = songs.reduce((acc, curr) => acc + (curr.plays * STREAM_RATE), 0);
+      totalCommunityEarningsEl.innerText = totalEarnings.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+
+      // EMPTY STATE: Kapag wala pang in-upload na kanta
+      if (list.length === 0) {
+        activeFoldersCountEl.innerText = "0 Folders";
+        foldersContainer.innerHTML = `
+          <div class="card-glass rounded-3xl p-12 text-center flex flex-col items-center justify-center gap-4 border border-dashed border-white/20">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl shadow-lg">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <div class="max-w-md">
+              <h3 class="text-lg font-black text-white">Walang Kanta sa Homepage</h3>
+              <p class="text-xs text-gray-400 mt-1 leading-relaxed">
+                Blangko pa ang site boss! Mag-upload ng sariling AI song gamit ang button sa itaas. Pagkapili mo ng genre (tulad ng <b>Pop Rock, Ballad, Reggae, o Metal</b>), awtomatikong lilitaw ang Folder dito!
+              </p>
+            </div>
+            <button onclick="document.getElementById('open-upload-modal').click()" class="btn-3d-green text-xs font-black px-6 py-3 rounded-xl text-black flex items-center gap-2 cursor-pointer mt-2">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Mag-Upload ng Unang AI Song
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      // Group songs automatically by Genre
+      const groupedByGenre = list.reduce((acc, song) => {
+        acc[song.genre] = acc[song.genre] || [];
+        acc[song.genre].push(song);
+        return acc;
+      }, {});
+
+      const genreKeys = Object.keys(groupedByGenre);
+      activeFoldersCountEl.innerText = `${genreKeys.length} Folders`;
+
+      // Gumawa ng Folder Section para sa bawat Genre na may laman
+      genreKeys.forEach(genreName => {
+        const songsInGenre = groupedByGenre[genreName];
+
+        const folderSection = document.createElement("section");
+        folderSection.className = "flex flex-col gap-3";
+
+        // FOLDER HEADER (May folder icon at bilang ng kanta)
+        folderSection.innerHTML = `
+          <div class="flex items-center justify-between px-1">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <i class="fa-solid fa-folder-closed text-sm"></i>
+              </div>
+              <h2 class="text-base font-black text-white tracking-wide flex items-center gap-2">
+                ${genreName} Folder
+                <span class="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-emerald-300 font-mono font-bold">${songsInGenre.length} song(s)</span>
+              </h2>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" id="folder-tracks-${genreName.replace(/\s+/g, '-')}">
+          </div>
+        `;
+
+        const tracksContainer = folderSection.querySelector(`#folder-tracks-${genreName.replace(/\s+/g, '-')}`);
+
+        // Ilagay ang bawat kanta sa ilalim ng kanyang Genre Folder
+        songsInGenre.forEach(song => {
+          const card = document.createElement("div");
+          card.className = "card-glass flex items-center justify-between p-3.5 rounded-2xl cursor-pointer group";
+          
+          const estRevenue = (song.plays * STREAM_RATE).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+
+          card.innerHTML = `
+            <div class="flex items-center gap-3.5 truncate">
+              <img src="${song.cover}" class="w-12 h-12 rounded-xl object-cover border border-white/10 shadow flex-shrink-0">
+              <div class="truncate">
+                <p class="font-bold text-white text-xs truncate group-hover:text-emerald-300 transition">${song.title}</p>
+                <div class="flex items-center gap-1.5 text-[10px] text-gray-400 mt-0.5">
+                  <span class="text-emerald-400 font-semibold">${song.artist}</span>
+                  <span>•</span>
+                  <span class="truncate text-gray-500 max-w-[130px]">${song.prompt}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 text-xs font-mono flex-shrink-0">
+              <div class="flex flex-col text-right">
+                <span class="text-gray-400 text-[10px]">${song.plays.toLocaleString()} plays</span>
+                <span class="text-emerald-400 text-[10px] font-bold">${estRevenue}</span>
+              </div>
+              <button class="w-9 h-9 rounded-xl bg-white/5 group-hover:bg-emerald-500 group-hover:text-black flex items-center justify-center transition shadow">
+                <i class="fa-solid fa-play text-xs ml-0.5"></i>
+              </button>
+            </div>
+          `;
+
+          card.addEventListener("click", () => {
+            const globalIndex = songs.findIndex(s => s.id === song.id);
+            playSong(globalIndex);
+          });
+
+          tracksContainer.appendChild(card);
+        });
+
+        foldersContainer.appendChild(folderSection);
+      });
+    }
+
+    // Play Track Function
+    function playSong(index) {
+      if (index < 0 || index >= songs.length) return;
+      currentSongIndex = index;
+      const song = songs[index];
+
+      // Dagdag sa plays & earnings
+      song.plays += 1;
+
+      audio.src = song.src;
+      playerTitle.innerText = song.title;
+      playerArtist.innerText = song.artist;
+      playerGenre.innerText = song.genre;
+      playerCover.src = song.cover;
+
+      // Unhide cover image and genre badge
+      placeholderIcon.classList.add("hidden");
+      playerCover.classList.remove("hidden");
+      playerGenre.classList.remove("hidden");
+      genreDot.classList.remove("hidden");
+
+      const earned = (song.plays * STREAM_RATE).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' });
+      playerRevenue.innerText = earned;
+
+      audio.play();
+      isPlaying = true;
+      playIcon.className = "fa-solid fa-pause text-sm";
+      renderGenreFolders();
+    }
+
+    // Play / Pause Toggle
+    playBtn.addEventListener("click", () => {
+      if (songs.length === 0) {
+        document.getElementById("open-upload-modal").click();
+        return;
+      }
+
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        playIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+      } else {
+        if (!audio.src || currentSongIndex === -1) {
+          playSong(0);
+        } else {
+          audio.play();
+          isPlaying = true;
+          playIcon.className = "fa-solid fa-pause text-sm";
+        }
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (songs.length === 0) return;
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      playSong(currentSongIndex);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (songs.length === 0) return;
+      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      playSong(currentSongIndex);
+    });
+
+    // Seek Timeline Tracking
+    audio.addEventListener("timeupdate", () => {
+      if (audio.duration) {
+        seekBar.value = (audio.currentTime / audio.duration) * 100;
+        currentTimeEl.innerText = formatTime(audio.currentTime);
+        totalDurationEl.innerText = formatTime(audio.duration);
+      }
+    });
+
+    seekBar.addEventListener("input", () => {
+      if (audio.duration) {
+        audio.currentTime = (seekBar.value / 100) * audio.duration;
+      }
+    });
+
+    audio.addEventListener("ended", () => nextBtn.click());
+
+    // Volume
+    volumeBar.addEventListener("input", (e) => {
+      audio.volume = e.target.value / 100;
+      volumeIcon.className = audio.volume === 0 ? "fa-solid fa-volume-xmark text-red-500" : "fa-solid fa-volume-high";
+    });
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    // Search Engine Filter
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = songs.filter(s => 
+        s.title.toLowerCase().includes(q) || 
+        s.artist.toLowerCase().includes(q) || 
+        s.genre.toLowerCase().includes(q) ||
+        s.prompt.toLowerCase().includes(q)
+      );
+      renderGenreFolders(filtered);
+    });
+
+    // Modal Handlers
+    openUploadBtn.addEventListener("click", () => uploadModal.classList.replace("hidden", "flex"));
+    closeUploadBtn.addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
+    cancelUploadBtn.addEventListener("click", () => uploadModal.classList.replace("flex", "hidden"));
+
+    // HANDLE UPLOAD WITH AUTOMATIC GENRE FOLDER CREATION
+    uploadForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("modal-title").value;
+      const artist = document.getElementById("modal-artist").value;
+      const genre = document.getElementById("modal-genre").value;
+      const prompt = document.getElementById("modal-prompt").value || "Generative AI Prompt";
+      const audioFile = document.getElementById("modal-audio").files[0];
+      const coverFile = document.getElementById("modal-cover").files[0];
+
+      if (!genre) return alert("Paki-pili ang genre ng iyong kanta!");
+      if (!audioFile) return alert("Paki-pili ang iyong MP3 audio file!");
+
+      // Lumikha ng native browser blob URL
+      const audioUrl = URL.createObjectURL(audioFile);
+      const coverUrl = coverFile 
+        ? URL.createObjectURL(coverFile) 
+        : "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200";
+
+      const newSong = {
+        id: Date.now(),
+        title,
+        artist,
+        genre,
+        prompt,
+        plays: 1,
+        cover: coverUrl,
+        src: audioUrl
+      };
+
+      // Ipasok ang bagong kanta sa simula ng array
+      songs.unshift(newSong);
+
+      // Isara ang modal at i-reset ang form
+      uploadModal.classList.replace("flex", "hidden");
+      uploadForm.reset();
+
+      // I-render muli: Awtomatikong lilitaw ang Genre Folder nito sa homepage!
+      renderGenreFolders();
+
+      // Agad patugtugin ang in-upload na kanta
+      playSong(0);
+    });
+
+    // Start-up initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      renderGenreFolders();
+      audio.volume = 0.8;
+    });
+  </script>
+</body>
+</html>
